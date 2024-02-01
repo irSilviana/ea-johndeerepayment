@@ -53,6 +53,7 @@ function init_john_deere_payment_gateway()
       // Actions.
       add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
       add_action('woocommerce_thankyou_' . $this->id, array($this, 'thankyou_page'));
+      add_filter('woocommerce_payment_complete_order_status', array($this, 'change_payment_complete_order_status'), 10, 3);
 
       // Customer Emails.
       add_action('woocommerce_email_before_order_table', array($this, 'email_instructions'), 10, 3);
@@ -67,7 +68,7 @@ function init_john_deere_payment_gateway()
       $this->id                 = 'john_deere';
       $this->icon               = apply_filters('woocommerce_john_deere_icon', plugins_url('/assets/images/john-deere-logo.png', __FILE__));
       // $this->method_title       = 'John Deere Payment Option';
-      $this->method_title       = _x('John Deere Payment', 'Check payment method', 'woocommerce');
+      $this->method_title       = 'John Deere Payment';
       $this->method_description = 'Allows payments with John Deere Financial Multi-Use Line';
       $this->has_fields         = true;
     }
