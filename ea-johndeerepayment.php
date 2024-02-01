@@ -4,7 +4,7 @@
  * Plugin Name: John Deere Financial Multi-Use Line
  * Plugin URI: https://edamame.agency/
  * Description: Adds a new payment option on the checkout page for John Deere Financial Multi-Use Line.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Irfani Silviana
  * Author URI: https://irfanisilviana.com/
  */
