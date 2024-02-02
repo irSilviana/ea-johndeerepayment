@@ -47,6 +47,7 @@ function init_john_deere_payment_gateway()
 
       // Define user set variables.
       $this->title          = $this->get_option('title');
+      $this->enabled        = $this->get_option('enabled');
       $this->description    = $this->get_option('description');
       $this->instructions   = $this->get_option('instructions');
 
