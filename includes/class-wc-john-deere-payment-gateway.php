@@ -2,13 +2,18 @@
 
 class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
 {
-
   /**
    * Gateway instructions that will be added to the thank you page and emails.
    *
    * @var string
    */
   public $instructions;
+
+  /**
+   * Unique identifier for the payment gateway
+   * @var string
+   */
+  public $id = 'john_deere';
 
   /**
    * Constructor for the gateway.
@@ -35,7 +40,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     // Customer Emails.
     add_action('woocommerce_email_before_order_table', array($this, 'email_instructions'), 10, 3);
   }
-
 
   /**
    * Setup general properties for the gateway.
@@ -153,7 +157,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     );
   }
 
-
   /**
    * Output for the order received page.
    */
@@ -163,7 +166,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
       echo wp_kses_post(wpautop(wptexturize($this->instructions)));
     }
   }
-
 
   /**
    * Display input fields in the checkout
@@ -213,5 +215,19 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
       ?>
     </div>
 <?php
+  }
+
+  /**
+   * Outputs instructions for the payment method in the order email.
+   *
+   * @param WC_Order $order Order instance.
+   * @param bool $sent_to_admin Whether the email is for admin.
+   * @param bool $plain_text Whether the email is plain text.
+   */
+  public function email_instructions($order, $sent_to_admin, $plain_text = false)
+  {
+    if ($this->instructions && !$sent_to_admin && $this->id === $order->get_payment_method() && $order->has_status('on-hold')) {
+      echo wp_kses_post(wpautop(wptexturize($this->instructions)) . PHP_EOL);
+    }
   }
 }
