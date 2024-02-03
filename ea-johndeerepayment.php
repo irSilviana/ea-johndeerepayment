@@ -36,7 +36,7 @@ function john_deere_payment_load_textdomain()
 add_action('wp_enqueue_scripts', 'enqueue_plugin_styles');
 function enqueue_plugin_styles()
 {
-  wp_enqueue_style('my-plugin-styles', plugin_dir_url(__FILE__) . 'styles.css');
+  wp_enqueue_style('my-plugin-styles', plugin_dir_url(__FILE__) . '/assets/css/styles.css');
 }
 
 // Add the payment gateway
@@ -48,7 +48,7 @@ function init_john_deere_payment_gateway()
   /**
    * Gateway class
    */
-  include plugin_dir_path(__FILE__) . 'WC_John_Deere_Payment_Gateway.php';
+  include plugin_dir_path(__FILE__) . '/includes/class-wc-john-deere-payment-gateway.php';
 
   /**
    * Add the Gateway to WooCommerce
