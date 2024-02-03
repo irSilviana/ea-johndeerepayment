@@ -286,15 +286,15 @@ function add_john_deere_payment_details_to_email($order, $sent_to_admin, $plain_
     echo '<h2>John Deere Payment Details</h2>';
 
     if ($jd_payment_option) {
-      echo '<p><strong>Payment Option:</strong> ' . esc_html($jd_payment_option) . '</p>';
+      echo '<p><strong>Payment Option:</strong> ' . esc_html($jd_payment_option) . '<br/>';
     }
 
     if ($jd_account_number) {
-      echo '<p><strong>Account Number:</strong> ' . esc_html($jd_account_number) . '</p>';
+      echo '<strong>Account Number:</strong> ' . esc_html($jd_account_number) . '<br/>';
     }
 
     if ($jd_account_name) {
-      echo '<p><strong>Account Name:</strong> ' . esc_html($jd_account_name) . '</p>';
+      echo '<strong>Account Name:</strong> ' . esc_html($jd_account_name) . '</p>';
     }
   }
 }
