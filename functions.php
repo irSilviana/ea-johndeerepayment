@@ -51,8 +51,8 @@ function display_john_deere_payment_fields_admin($order)
 /**
  * Add custom fields to the registration form
  */
-add_action('woocommerce_register_form', 'add_custom_field_to_registration_form');
-function add_custom_field_to_registration_form()
+add_action('woocommerce_register_form', 'add_john_deere_custom_field_to_registration_form');
+function add_john_deere_custom_field_to_registration_form()
 {
 ?>
   <p class="form-row form-row-wide">
@@ -219,9 +219,9 @@ function add_custom_fields_to_user_admin_page($user)
 /**
  * Save custom fields from the user admin page
  */
-add_action('personal_options_update', 'save_custom_fields_from_user_admin_page');
-add_action('edit_user_profile_update', 'save_custom_fields_from_user_admin_page');
-function save_custom_fields_from_user_admin_page($user_id)
+add_action('personal_options_update', 'save_john_deere_fields_from_user_admin_page');
+add_action('edit_user_profile_update', 'save_john_deere_fields_from_user_admin_page');
+function save_john_deere_fields_from_user_admin_page($user_id)
 {
   if (current_user_can('edit_user', $user_id)) {
     update_user_meta($user_id, 'jd_account_enabled', isset($_POST['jd_account_enabled']) ? 1 : 0);

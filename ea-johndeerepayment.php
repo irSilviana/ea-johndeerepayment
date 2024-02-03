@@ -33,14 +33,24 @@ function john_deere_payment_load_textdomain()
 }
 
 // Enqueue the plugin styles
-add_action('wp_enqueue_scripts', 'enqueue_plugin_styles');
-function enqueue_plugin_styles()
+add_action('wp_enqueue_scripts', 'enqueue_ea_john_deere_plugin_styles');
+function enqueue_ea_john_deere_plugin_styles()
 {
   // Register the style with WordPress
   wp_register_style('ea-john-deere-styles', plugin_dir_url(__FILE__) . '/assets/css/styles.css', array(), '1.0.0', 'all');
 
   // Enqueue the style
   wp_enqueue_style('ea-john-deere-styles');
+}
+
+add_action('admin_enqueue_scripts', 'ea_john_deere_admin_enqueue_styles');
+function ea_john_deere_admin_enqueue_styles()
+{
+  // Register the style with WordPress
+  wp_register_style('ea-john-deere-admin-styles', plugin_dir_url(__FILE__) . '/assets/css/admin-styles.css', array(), '1.0.0', 'all');
+
+  // Enqueue the style
+  wp_enqueue_style('ea-john-deere-admin-styles');
 }
 
 // Add the payment gateway
