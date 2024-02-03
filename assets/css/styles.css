@@ -1,5 +1,5 @@
 .payment_method_john_deere_payment img {
-  max-width: 40px;
+  max-width: 40px !important;
 }
 
 fieldset#jd_payment_option {
