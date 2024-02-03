@@ -270,3 +270,33 @@ function jd_woocommerce_form_field($key, $args, $value = null)
 
   return $field;
 }
+
+
+/**
+ * Add custom fields to the email
+ */
+function add_john_deere_payment_details_to_email($order, $sent_to_admin, $plain_text, $email)
+{
+  // Check if the order has the John Deere payment details
+  $jd_payment_option = get_post_meta($order->get_id(), 'jd_payment_option', true);
+  $jd_account_number = get_post_meta($order->get_id(), 'jd_account_number', true);
+  $jd_account_name = get_post_meta($order->get_id(), 'jd_account_name', true);
+
+  if ($jd_payment_option || $jd_account_number || $jd_account_name) {
+    echo '<h2>John Deere Payment Details</h2>';
+
+    if ($jd_payment_option) {
+      echo '<p><strong>Payment Option:</strong> ' . esc_html($jd_payment_option) . '</p>';
+    }
+
+    if ($jd_account_number) {
+      echo '<p><strong>Account Number:</strong> ' . esc_html($jd_account_number) . '</p>';
+    }
+
+    if ($jd_account_name) {
+      echo '<p><strong>Account Name:</strong> ' . esc_html($jd_account_name) . '</p>';
+    }
+  }
+}
+
+add_action('woocommerce_email_order_meta', 'add_john_deere_payment_details_to_email', 10, 4);
