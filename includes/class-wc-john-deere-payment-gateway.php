@@ -43,7 +43,7 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
   protected function setup_properties()
   {
     $this->id                 = 'john_deere_payment';
-    $this->icon               = apply_filters('woocommerce_john_deere_icon', plugins_url('/assets/images/john-deere-logo.png', __FILE__));
+    $this->icon               = apply_filters('woocommerce_john_deere_icon', plugin_dir_url(dirname(__FILE__)) . '/assets/images/john-deere-logo.png');
     $this->method_title       = 'John Deere Financial Multi-Use Line';
     $this->method_description = 'Allows payments with John Deere Financial Multi-Use Line';
     $this->has_fields         = true;

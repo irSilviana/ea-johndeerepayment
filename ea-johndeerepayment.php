@@ -36,7 +36,11 @@ function john_deere_payment_load_textdomain()
 add_action('wp_enqueue_scripts', 'enqueue_plugin_styles');
 function enqueue_plugin_styles()
 {
-  wp_enqueue_style('my-plugin-styles', plugin_dir_url(__FILE__) . '/assets/css/styles.css');
+  // Register the style with WordPress
+  wp_register_style('ea-john-deere-styles', plugin_dir_url(__FILE__) . '/assets/css/styles.css', array(), '1.0.0', 'all');
+
+  // Enqueue the style
+  wp_enqueue_style('ea-john-deere-styles');
 }
 
 // Add the payment gateway

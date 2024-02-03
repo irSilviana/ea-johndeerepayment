@@ -32,12 +32,20 @@ function display_john_deere_payment_fields_admin($order)
   $jd_account_number = get_post_meta($order->get_id(), 'jd_account_number', true);
   $jd_account_name = get_post_meta($order->get_id(), 'jd_account_name', true);
 
-  echo '<div class="jd-financial-multi-use-line">';
-  echo '<h3>' . __('John Deere Financial Multi-Use Line',  'john-deere-payment') . '</h3>';
-  echo '<p><strong>' . __('Payment Option',  'john-deere-payment') . ':</strong> ' . $jd_payment_option . '<br/>';
-  echo '<strong>' . __('Account Number',  'john-deere-payment') . ':</strong> ' . $jd_account_number . '<br/>';
-  echo '<strong>' . __('Account Name',  'john-deere-payment') . ':</strong> ' . $jd_account_name . '</p>';
-  echo '</div>';
+  if (!empty($jd_payment_option) || !empty($jd_account_number) || !empty($jd_account_name)) {
+    echo '<div class="jd-financial-multi-use-line">';
+    echo '<h3>' . __('John Deere Financial Multi-Use Line',  'john-deere-payment') . '</h3>';
+    if (!empty($jd_payment_option)) {
+      echo '<p><strong>' . __('Payment Option',  'john-deere-payment') . ':</strong> ' . $jd_payment_option . '<br/>';
+    }
+    if (!empty($jd_account_number)) {
+      echo '<strong>' . __('Account Number',  'john-deere-payment') . ':</strong> ' . $jd_account_number . '<br/>';
+    }
+    if (!empty($jd_account_name)) {
+      echo '<strong>' . __('Account Name',  'john-deere-payment') . ':</strong> ' . $jd_account_name . '</p>';
+    }
+    echo '</div>';
+  }
 }
 
 /**
