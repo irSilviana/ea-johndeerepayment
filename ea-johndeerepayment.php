@@ -7,6 +7,10 @@
  * Version: 1.0.0
  * Author: Irfani Silviana
  * Author URI: https://irfanisilviana.com/
+ * Text Domain: john-deere-payment
+ * Domain Path: /languages
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 
@@ -87,42 +91,42 @@ function init_john_deere_payment_gateway()
     {
       $this->form_fields = array(
         'enabled' => array(
-          'title'       => 'Enable/Disable',
+          'title'       => __('Enable/Disable', 'john-deere-payment'),
           'label'       => 'Enable John Deere Payment',
           'type'        => 'checkbox',
           'default'     => 'no'
         ),
         'title' => array(
-          'title'       => 'Title',
+          'title'       => __('Title', 'john-deere-payment'),
           'type'        => 'safe_text',
-          'description' => 'This controls the title which the user sees during checkout.',
+          'description' => __('This controls the title which the user sees during checkout.', 'john-deere-payment'),
           'default'     => 'John Deere Payment', 'Check payment method',
           'desc_tip'    => true,
         ),
         'order_status' => array(
-          'title'       => __('Order Status', 'woocommerce'),
+          'title'       => __('Order Status',  'john-deere-payment'),
           'type'        => 'select',
-          'description' => __('Choose the order status for the John Deere payment method.', 'woocommerce'),
-          'default'     => 'pending',
+          'description' => __('Choose the order status for the John Deere payment method.',  'john-deere-payment'),
+          'default'     => 'processing',
           'options'     => array(
-            'pending'    => __('Pending payment', 'woocommerce'),
-            'processing' => __('Processing', 'woocommerce'),
-            'on-hold'    => __('On hold', 'woocommerce'),
-            'completed'  => __('Completed', 'woocommerce'),
+            'pending'    => __('Pending payment',  'john-deere-payment'),
+            'processing' => __('Processing',  'john-deere-payment'),
+            'on-hold'    => __('On hold',  'john-deere-payment'),
+            'completed'  => __('Completed',  'john-deere-payment'),
           ),
         ),
         'description' => array(
-          'title'       => 'Description',
+          'title'       => __('Description', 'john-deere-payment'),
           'type'        => 'textarea',
-          'description' => 'This controls the description which the user sees during checkout.',
+          'description' => __('This controls the description which the user sees during checkout.', 'john-deere-payment'),
           'default'     => 'Pay with John Deere Financial Multi-Use Line',
           'desc_tip'    => true,
         ),
 
         'instructions' => array(
-          'title'       => 'Instructions',
+          'title'       => __('Instructions', 'john-deere-payment'),
           'type'        => 'textarea',
-          'description' => 'Instructions that will be added to the thank you page and order emails.',
+          'description' => __('Instructions that will be added to the thank you page and order emails.', 'john-deere-payment'),
           'default'     => 'Your order will be paid with John Deere Financial Multi-Use Line',
           'desc_tip'    => true,
         ),
@@ -136,17 +140,17 @@ function init_john_deere_payment_gateway()
     public function validate_fields()
     {
       if (empty($_POST['jd_payment_option'])) {
-        wc_add_notice(__('Please select a payment option.', 'woocommerce'), 'error');
+        wc_add_notice(__('Please select a payment option.',  'john-deere-payment'), 'error');
         return false;
       }
 
       if (empty($_POST['jd_account_number'])) {
-        wc_add_notice(__('Please enter your John Deere Multi-Use Account Number.', 'woocommerce'), 'error');
+        wc_add_notice(__('Please enter your John Deere Multi-Use Account Number.',  'john-deere-payment'), 'error');
         return false;
       }
 
       if (empty($_POST['jd_account_name'])) {
-        wc_add_notice(__('Please enter the name on the account.', 'woocommerce'), 'error');
+        wc_add_notice(__('Please enter the name on the account.',  'john-deere-payment'), 'error');
         return false;
       }
 
@@ -215,7 +219,7 @@ function init_john_deere_payment_gateway()
         woocommerce_form_field('jd_account_name', array(
           'type'          => 'text',
           'class'         => array('jd-account-name form-row-wide'),
-          'label'         => __('Name on the account'),
+          'label'         => __('Name on the account', 'john-deere-payment'),
           'required'      => true,
           'default'       => $jd_account_name ? $jd_account_name : ''
         ));
@@ -224,7 +228,7 @@ function init_john_deere_payment_gateway()
         woocommerce_form_field('jd_account_number', array(
           'type'          => 'number',
           'class'         => array('jd-account-number form-row-wide'),
-          'label'         => __('John Deere Multi-Use Account Number'),
+          'label'         => __('John Deere Multi-Use Account Number', 'john-deere-payment'),
           'required'      => true,
           'default'       => $jd_account_number ? $jd_account_number : ''
         ));
@@ -233,10 +237,10 @@ function init_john_deere_payment_gateway()
         woocommerce_form_field('jd_payment_option', array(
           'type'          => 'radio',
           'class'         => array('jd-payment-option form-row-wide'),
-          'label'         => __('Choose your payment option'),
+          'label'         => __('Choose your payment option', 'john-deere-payment'),
           'options'       => array(
-            'Regular Limit Line' => 'Regular Limit Line. I agree that this transaction will be billed to my John Deere Financial Multi-Use Line',
-            'Special Term Limit Line' => 'Special Term Limit Line. I agree this transaction will be applied to my John Deere Financial Multi-Use Line.',
+            'Regular Limit Line' => __('Regular Limit Line. I agree that this transaction will be billed to my John Deere Financial Multi-Use Line', 'john-deere-payment'),
+            'Special Term Limit Line' => __('Special Term Limit Line. I agree this transaction will be applied to my John Deere Financial Multi-Use Line.', 'john-deere-payment'),
           ),
           'required'      => true,
           'default'       => $jd_payment_option ? $jd_payment_option : ''
