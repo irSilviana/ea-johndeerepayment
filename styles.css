@@ -2,17 +2,21 @@
   max-width: 40px;
 }
 
-.custom-grid .woocommerce-input-wrapper {
+fieldset#jd_payment_option {
+  padding: 10px;
+}
+
+.jd-custom-grid .woocommerce-input-wrapper {
   display: grid;
   grid-template-columns: auto 1fr;
   row-gap: 10px;
 }
 
-.custom-grid .woocommerce-input-wrapper > label {
+.jd-custom-grid .woocommerce-input-wrapper > label {
   display: contents;
   margin-bottom: 0;
 }
 
-.custom-grid .woocommerce-input-wrapper > label > input[type='radio'] {
+.jd-custom-grid .woocommerce-input-wrapper > label > input[type='radio'] {
   grid-row: span 2;
 }

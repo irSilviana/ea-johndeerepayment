@@ -247,13 +247,13 @@ function init_john_deere_payment_gateway()
         ));
 
         // Add the radio buttons for payment options
-        woocommerce_form_field('jd_payment_option', array(
+        echo jd_woocommerce_form_field('jd_payment_option', array(
           'type'          => 'radio',
-          'class'         => array('jd-payment-option form-row-wide', 'custom-grid'),
+          'class'         => array('jd-payment-option form-row-wide', 'jd-custom-grid'),
           'label'         => __('Choose your payment option', 'john-deere-payment'),
           'options'       => array(
-            'Regular Limit Line' => __('Regular Limit Line. I agree that this transaction will be billed to my John Deere Financial Multi-Use Line', 'john-deere-payment'),
-            'Special Term Limit Line' => __('Special Term Limit Line. I agree this transaction will be applied to my John Deere Financial Multi-Use Line.', 'john-deere-payment'),
+            'Regular Limit Line' => __('Regular Limit Line. <br><span style="font-size:0.9rem">I agree that this transaction will be billed to my John Deere Financial Multi-Use Line</span>', 'john-deere-payment'),
+            'Special Term Limit Line' => __('Special Term Limit Line. <br><span style="font-size:0.9rem">I agree this transaction will be applied to my John Deere Financial Multi-Use Line.</span>', 'john-deere-payment'),
           ),
           'required'      => true,
           'default'       => $jd_payment_option ? $jd_payment_option : ''

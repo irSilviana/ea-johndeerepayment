@@ -228,3 +228,37 @@ function save_custom_fields_from_user_admin_page($user_id)
     }
   }
 }
+
+
+/**
+ * Customise the form field
+ */
+function jd_woocommerce_form_field($key, $args, $value = null)
+{
+  $args = wp_parse_args($args, array(
+    'type'          => 'text',
+    'label'         => '',
+    'placeholder'   => '',
+    'class'         => array(),
+    'required'      => false,
+    'options'       => array(),
+    'default'       => '',
+  ));
+
+  $field = '';
+
+  if ($args['type'] === 'radio') {
+    $field .= '<fieldset id="' . esc_attr($key) . '" class="form-row ' . esc_attr(implode(' ', $args['class'])) . '">';
+    $field .= '<legend>' . wp_kses_post($args['label']) . '</legend>';
+
+    foreach ($args['options'] as $option_key => $option_value) {
+      $field .= '<label><input type="radio" name="' . esc_attr($key) . '" value="' . esc_attr($option_key) . '"' . checked($value, $option_key, false) . ' /> ' . $option_value . '</label><br />';
+    }
+
+    $field .= '</fieldset>';
+  }
+
+  // Add other field types here...
+
+  return $field;
+}
