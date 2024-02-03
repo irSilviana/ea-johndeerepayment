@@ -18,6 +18,8 @@ The John Deere Payment Plugin adds a new payment method to your WooCommerce stor
 
 - **Order View Details**: Displays the John Deere account details on the order view page in the account section of your site.
 
+- **User Profile Integration**: Allows administrators to manage John Deere account details (account enabled status, account number, account name, and payment option) from the user profile page in the WordPress admin area.
+
 ## Installation
 
 1. Upload the plugin files to the `/wp-content/plugins/john-deere-payment` directory, or install the plugin through the WordPress plugins screen directly.
