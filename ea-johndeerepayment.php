@@ -3,7 +3,7 @@
 /**
  * Plugin Name: John Deere Financial Multi-Use Line
  * Plugin URI: https://edamame.agency/
- * Description: Adds a new payment option on the checkout page for John Deere Financial Multi-Use Line.
+ * Description: Adds a John Deere payment method to WooCommerce. It allows customers to enter and validates their John Deere account details at registration, checkout and account section. It provides administrators to manage John Deere account details from the user profile page in the WordPress admin area.
  * Version: 1.0.0
  * Author: Irfani Silviana
  * Author URI: https://irfanisilviana.com/
