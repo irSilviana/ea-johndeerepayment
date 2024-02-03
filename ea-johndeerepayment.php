@@ -4,17 +4,22 @@
  * Plugin Name: John Deere Financial Multi-Use Line
  * Plugin URI: https://edamame.agency/
  * Description: Adds a new payment option on the checkout page for John Deere Financial Multi-Use Line.
- * Version: 1.0.1
+ * Version: 1.0.0
  * Author: Irfani Silviana
  * Author URI: https://irfanisilviana.com/
  */
 
+
+// If this file is called directly, abort.
 if (!defined('ABSPATH')) {
   exit; // Exit if accessed directly.
 }
 
+// Check if WooCommerce is active
 if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) return;
 
+
+// Add the payment gateway
 add_action('plugins_loaded', 'init_john_deere_payment_gateway', 0);
 
 function init_john_deere_payment_gateway()
@@ -92,6 +97,18 @@ function init_john_deere_payment_gateway()
           'default'     => 'John Deere Payment', 'Check payment method',
           'desc_tip'    => true,
         ),
+        'order_status' => array(
+          'title'       => __('Order Status', 'woocommerce'),
+          'type'        => 'select',
+          'description' => __('Choose the order status for the John Deere payment method.', 'woocommerce'),
+          'default'     => 'pending',
+          'options'     => array(
+            'pending'    => __('Pending payment', 'woocommerce'),
+            'processing' => __('Processing', 'woocommerce'),
+            'on-hold'    => __('On hold', 'woocommerce'),
+            'completed'  => __('Completed', 'woocommerce'),
+          ),
+        ),
         'description' => array(
           'title'       => 'Description',
           'type'        => 'textarea',
@@ -107,6 +124,7 @@ function init_john_deere_payment_gateway()
           'default'     => 'Your order will be paid with John Deere Financial Multi-Use Line',
           'desc_tip'    => true,
         ),
+
       );
     }
 
@@ -143,8 +161,12 @@ function init_john_deere_payment_gateway()
     {
       $order = wc_get_order($order_id);
 
-      $order->update_status('processing', 'Payment via John Deere Financial Multi-Use Line');
 
+      $order_status = $this->get_option('order_status', 'processing');
+      $order->update_status($order_status, 'Payment via John Deere Financial Multi-Use Line');
+
+      // Reduce stock levels
+      wc_reduce_stock_levels($order_id);
 
       $order->save();
 
@@ -239,7 +261,6 @@ function init_john_deere_payment_gateway()
  * Add custom fields to the order and user meta
  */
 add_action('woocommerce_checkout_update_order_meta', 'save_john_deere_payment_fields');
-
 function save_john_deere_payment_fields($order_id)
 {
   if (!empty($_POST['jd_payment_option'])) {
@@ -258,12 +279,10 @@ function save_john_deere_payment_fields($order_id)
   }
 }
 
-
 /**
  * Display custom fields in the order details page
  */
 add_action('woocommerce_admin_order_data_after_order_details', 'display_john_deere_payment_fields_admin');
-
 function display_john_deere_payment_fields_admin($order)
 {
   $jd_payment_option = get_post_meta($order->get_id(), 'jd_payment_option', true);
@@ -272,25 +291,23 @@ function display_john_deere_payment_fields_admin($order)
 
   echo '<div class="jd-financial-multi-use-line">';
   echo '<h3>' . __('John Deere Financial Multi-Use Line', 'woocommerce') . '</h3>';
-  echo '<p><strong>' . __('Payment Option', 'woocommerce') . ':</strong> ' . $jd_payment_option . '</p>';
-  echo '<p><strong>' . __('Account Number', 'woocommerce') . ':</strong> ' . $jd_account_number . '</p>';
-  echo '<p><strong>' . __('Account Name', 'woocommerce') . ':</strong> ' . $jd_account_name . '</p>';
+  echo '<p><strong>' . __('Payment Option', 'woocommerce') . ':</strong> ' . $jd_payment_option . '<br/>';
+  echo '<strong>' . __('Account Number', 'woocommerce') . ':</strong> ' . $jd_account_number . '<br/>';
+  echo '<strong>' . __('Account Name', 'woocommerce') . ':</strong> ' . $jd_account_name . '</p>';
   echo '</div>';
 }
-
-
 
 /**
  * Add custom fields to the registration form
  */
 add_action('woocommerce_register_form', 'add_custom_field_to_registration_form');
-
 function add_custom_field_to_registration_form()
 {
   ?>
   <p class="form-row form-row-wide">
-    <label for="reg_jd_account_number"><?php _e('John Deere Account Number', 'woocommerce'); ?> </label>
-    <input type="number" class="input-text" name="jd_account_number" id="reg_jd_account_number" value="<?php if (!empty($_POST['jd_account_number'])) echo esc_attr($_POST['jd_account_number']); ?>" />
+  <h3>John Deere Financial Multi-Use Line</h3>
+  <label for="reg_jd_account_number"><?php _e('John Deere Account Number', 'woocommerce'); ?> </label>
+  <input type="number" class="input-text" name="jd_account_number" id="reg_jd_account_number" value="<?php if (!empty($_POST['jd_account_number'])) echo esc_attr($_POST['jd_account_number']); ?>" />
   </p>
   <p class="form-row form-row-wide">
     <label for="reg_jd_account_name"><?php _e('John Deere Account Name', 'woocommerce'); ?> </label>
@@ -308,8 +325,10 @@ function add_custom_field_to_registration_form()
 <?php
 }
 
+/**
+ * Validate custom fields in the registration form
+ */
 add_action('woocommerce_register_post', 'validate_custom_field_in_registration_form', 10, 3);
-
 function validate_custom_field_in_registration_form($username, $email, $validation_errors)
 {
   if (!is_numeric($_POST['jd_account_number'])) {
@@ -319,8 +338,10 @@ function validate_custom_field_in_registration_form($username, $email, $validati
   return $validation_errors;
 }
 
+/**
+ * Save custom fields from the registration form
+ */
 add_action('woocommerce_created_customer', 'save_custom_field_from_registration_form');
-
 function save_custom_field_from_registration_form($customer_id)
 {
   if (isset($_POST['jd_account_number']) && is_numeric($_POST['jd_account_number'])) {
@@ -339,7 +360,6 @@ function save_custom_field_from_registration_form($customer_id)
  * Add custom fields to the User edit account form
  */
 add_action('woocommerce_edit_account_form', 'add_custom_fields_to_edit_account_form');
-
 function add_custom_fields_to_edit_account_form()
 {
   $user_id = get_current_user_id();
@@ -380,9 +400,10 @@ function add_custom_fields_to_edit_account_form()
 <?php
 }
 
-
+/**
+ * Save custom fields from the User edit account form
+ */
 add_action('woocommerce_save_account_details', 'save_jd_account_enabled');
-
 function save_jd_account_enabled($user_id)
 {
   if (isset($_POST['jd_account_enabled'])) {
@@ -408,7 +429,6 @@ function save_jd_account_enabled($user_id)
  */
 add_action('show_user_profile', 'add_custom_fields_to_user_admin_page');
 add_action('edit_user_profile', 'add_custom_fields_to_user_admin_page');
-
 function add_custom_fields_to_user_admin_page($user)
 {
   $jd_account_number = get_the_author_meta('jd_account_number', $user->ID);
@@ -449,9 +469,11 @@ function add_custom_fields_to_user_admin_page($user)
 <?php
 }
 
+/**
+ * Save custom fields from the user admin page
+ */
 add_action('personal_options_update', 'save_custom_fields_from_user_admin_page');
 add_action('edit_user_profile_update', 'save_custom_fields_from_user_admin_page');
-
 function save_custom_fields_from_user_admin_page($user_id)
 {
   if (current_user_can('edit_user', $user_id)) {
