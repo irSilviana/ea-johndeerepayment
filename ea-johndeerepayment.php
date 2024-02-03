@@ -25,6 +25,20 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 // Include the main plugin file
 include plugin_dir_path(__FILE__) . 'functions.php';
 
+// Load the plugin text domain
+add_action('plugins_loaded', 'john_deere_payment_load_textdomain');
+function john_deere_payment_load_textdomain()
+{
+  load_plugin_textdomain('john-deere-payment', false, dirname(plugin_basename(__FILE__)) . '/languages');
+}
+
+// Enqueue the plugin styles
+add_action('wp_enqueue_scripts', 'enqueue_plugin_styles');
+function enqueue_plugin_styles()
+{
+  wp_enqueue_style('my-plugin-styles', plugin_dir_url(__FILE__) . 'styles.css');
+}
+
 // Add the payment gateway
 add_action('plugins_loaded', 'init_john_deere_payment_gateway', 0);
 
@@ -212,8 +226,7 @@ function init_john_deere_payment_gateway()
 
 ?>
       <div id="john_deere_payment_fields">
-        <h3>John Deere Payment Details</h3>
-
+        <h3><?php _e('John Deere Payment Details', 'john-deere-payment') ?></h3>
         <?php
         // Add the input field for the account name
         woocommerce_form_field('jd_account_name', array(
@@ -236,7 +249,7 @@ function init_john_deere_payment_gateway()
         // Add the radio buttons for payment options
         woocommerce_form_field('jd_payment_option', array(
           'type'          => 'radio',
-          'class'         => array('jd-payment-option form-row-wide'),
+          'class'         => array('jd-payment-option form-row-wide', 'custom-grid'),
           'label'         => __('Choose your payment option', 'john-deere-payment'),
           'options'       => array(
             'Regular Limit Line' => __('Regular Limit Line. I agree that this transaction will be billed to my John Deere Financial Multi-Use Line', 'john-deere-payment'),
