@@ -20,3 +20,8 @@ fieldset#jd_payment_option {
 .jd-custom-grid .woocommerce-input-wrapper > label > input[type='radio'] {
   grid-row: span 2;
 }
+
+/* CSS code */
+#jd_account_number.invalid {
+  border: 1px solid red;
+}

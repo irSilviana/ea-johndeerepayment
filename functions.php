@@ -35,14 +35,14 @@ function display_john_deere_payment_fields_admin($order)
   if (!empty($jd_payment_option) || !empty($jd_account_number) || !empty($jd_account_name)) {
     echo '<div class="jd-financial-multi-use-line">';
     echo '<h3>' . __('John Deere Financial Multi-Use Line',  'john-deere-payment') . '</h3>';
-    if (!empty($jd_payment_option)) {
-      echo '<p><strong>' . __('Payment Option',  'john-deere-payment') . ':</strong> ' . $jd_payment_option . '<br/>';
+    if (!empty($jd_account_name)) {
+      echo '<p><strong>' . __('Account Name',  'john-deere-payment') . ':</strong> ' . $jd_account_name . '<br/>';
     }
     if (!empty($jd_account_number)) {
       echo '<strong>' . __('Account Number',  'john-deere-payment') . ':</strong> ' . $jd_account_number . '<br/>';
     }
-    if (!empty($jd_account_name)) {
-      echo '<strong>' . __('Account Name',  'john-deere-payment') . ':</strong> ' . $jd_account_name . '</p>';
+    if (!empty($jd_payment_option)) {
+      echo '<strong>' . __('Payment Option',  'john-deere-payment') . ':</strong> ' . $jd_payment_option . '</p>';
     }
     echo '</div>';
   }
@@ -57,12 +57,13 @@ function add_john_deere_custom_field_to_registration_form()
 ?>
   <p class="form-row form-row-wide">
   <h3><?php _e('John Deere Financial Multi-Use Line', 'john-deere-payment') ?></h3>
-  <label for="reg_jd_account_number"><?php _e('John Deere Account Number',  'john-deere-payment'); ?> </label>
-  <input type="text" class="input-text" name="jd_account_number" id="reg_jd_account_number" value="<?php if (!empty($_POST['jd_account_number'])) echo esc_attr($_POST['jd_account_number']); ?>" />
-  </p>
   <p class="form-row form-row-wide">
     <label for="reg_jd_account_name"><?php _e('John Deere Account Name',  'john-deere-payment'); ?> </label>
     <input type="text" class="input-text" name="jd_account_name" id="reg_jd_account_name" value="<?php if (!empty($_POST['jd_account_name'])) echo esc_attr($_POST['jd_account_name']); ?>" />
+  </p>
+  <p class="form-row form-row-wide">
+    <label for="reg_jd_account_number"><?php _e('John Deere Account Number',  'john-deere-payment'); ?> </label>
+    <input type="text" class="input-text" name="jd_account_number" id="reg_jd_account_number" value="<?php if (!empty($_POST['jd_account_number'])) echo esc_attr($_POST['jd_account_number']); ?>" />
   </p>
   <p class="form-row form-row-wide">
     <label><?php _e('John Deere Payment Option',  'john-deere-payment'); ?> </label>
@@ -82,7 +83,7 @@ add_action('woocommerce_register_post', 'validate_custom_field_in_registration_f
 function validate_custom_field_in_registration_form($username, $email, $validation_errors)
 {
   if (!is_numeric($_POST['jd_account_number'])) {
-    $validation_errors->add('jd_account_number_error', __('John Deere Account Number is  should be a number!', 'john-deere-payment'));
+    $validation_errors->add('jd_account_number_error', __('John Deere Account Number should be a number!', 'john-deere-payment'));
   }
 
   return $validation_errors;
@@ -122,17 +123,16 @@ function add_custom_fields_to_edit_account_form()
   <fieldset>
     <legend><?php _e('John Deere Account Details',  'john-deere-payment'); ?></legend>
     <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-
-      <input type="checkbox" class="woocommerce-Input woocommerce-Input--checkbox input-checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" <?php checked($jd_account_enabled, 1); ?> /> <?php _e('Enable / Disable John Deere Account ',  'john-deere-payment') ?>
+      <input type="checkbox" class="woocommerce-Input woocommerce-Input--checkbox input-checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" <?php checked($jd_account_enabled, 1); ?> /> <?php _e('Show / hide John Deere Account ',  'john-deere-payment') ?>
     </p>
     <div id="jd_account_details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
       <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-        <label for="jd_account_number"><?php _e('Account Number',  'john-deere-payment'); ?></label>
-        <input type="number" class="woocommerce-Input woocommerce-Input--text input-text" name="jd_account_number" id="jd_account_number" value="<?php echo esc_attr($jd_account_number); ?>" />
-      </p>
-      <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
         <label for="jd_account_name"><?php _e('Account Name',  'john-deere-payment'); ?></label>
         <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="jd_account_name" id="jd_account_name" value="<?php echo esc_attr($jd_account_name); ?>" />
+      </p>
+      <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+        <label for="jd_account_number"><?php _e('Account Number',  'john-deere-payment'); ?></label>
+        <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="jd_account_number" id="jd_account_number" value="<?php echo esc_attr($jd_account_number); ?>" />
       </p>
       <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
         <label><?php _e('Payment Option',  'john-deere-payment'); ?></label>
@@ -186,16 +186,16 @@ function add_custom_fields_to_user_admin_page($user)
   <h3><?php _e('John Deere Account Details', 'john-deere-payment'); ?></h3>
   <table class="form-table">
     <tr>
-      <th><label for="jd_account_enabled"><?php _e('Enable John Deere Account', 'john-deere-payment'); ?></label></th>
+      <th><label for="jd_account_enabled"><?php _e('Show / hide John Deere Account', 'john-deere-payment'); ?></label></th>
       <td><input type="checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" <?php checked($jd_account_enabled, 1); ?> /></td>
-    </tr>
-    <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
-      <th><label for="jd_account_number"><?php _e('Account Number', 'john-deere-payment'); ?></label></th>
-      <td><input type="number" name="jd_account_number" id="jd_account_number" value="<?php echo esc_attr($jd_account_number); ?>" class="regular-text" /></td>
     </tr>
     <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
       <th><label for="jd_account_name"><?php _e('Account Name', 'john-deere-payment'); ?></label></th>
       <td><input type="text" name="jd_account_name" id="jd_account_name" value="<?php echo esc_attr($jd_account_name); ?>" class="regular-text" /></td>
+    </tr>
+    <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
+      <th><label for="jd_account_number"><?php _e('Account Number', 'john-deere-payment'); ?></label></th>
+      <td><input type="text" name="jd_account_number" id="jd_account_number" value="<?php echo esc_attr($jd_account_number); ?>" class="regular-text" /></td>
     </tr>
     <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
       <th><label><?php _e('Payment Option', 'john-deere-payment'); ?></label></th>
@@ -284,19 +284,45 @@ function add_john_deere_payment_details_to_email($order, $sent_to_admin, $plain_
 
   if ($jd_payment_option || $jd_account_number || $jd_account_name) {
     echo '<h2>John Deere Payment Details</h2>';
-
-    if ($jd_payment_option) {
-      echo '<p><strong>Payment Option:</strong> ' . esc_html($jd_payment_option) . '<br/>';
+    if ($jd_account_name) {
+      echo '<p><strong>Account Name:</strong> ' . esc_html($jd_account_name) . '<br/>';
     }
-
     if ($jd_account_number) {
       echo '<strong>Account Number:</strong> ' . esc_html($jd_account_number) . '<br/>';
     }
-
-    if ($jd_account_name) {
-      echo '<strong>Account Name:</strong> ' . esc_html($jd_account_name) . '</p>';
+    if ($jd_payment_option) {
+      echo '<strong>Payment Option:</strong> ' . esc_html($jd_payment_option) . '</p>';
     }
   }
 }
 
 add_action('woocommerce_email_order_meta', 'add_john_deere_payment_details_to_email', 10, 4);
+
+
+
+/**
+ * Display custom fields in the order details page
+ */
+function display_john_deere_details_on_order_view($order)
+{
+  // Check if the order has the John Deere details
+  $jd_payment_option = get_post_meta($order->get_id(), 'jd_payment_option', true);
+  $jd_account_number = get_post_meta($order->get_id(), 'jd_account_number', true);
+  $jd_account_name = get_post_meta($order->get_id(), 'jd_account_name', true);
+
+  if ($jd_payment_option || $jd_account_number || $jd_account_name) {
+    echo '<h2>John Deere Details</h2>';
+
+    if ($jd_account_name) {
+      echo '<p><strong>Account Name:</strong> ' . esc_html($jd_account_name) . '<br/>';
+    }
+    if ($jd_account_number) {
+      echo '<strong>Account Number:</strong> ' . esc_html($jd_account_number) . '<br/>';
+    }
+    if ($jd_payment_option) {
+      echo '<strong>Payment Option:</strong> ' . esc_html($jd_payment_option) . '</p>';
+    }
+  }
+}
+
+add_action('woocommerce_order_details_after_order_table', 'display_john_deere_details_on_order_view');
