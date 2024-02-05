@@ -12,6 +12,8 @@ The John Deere Payment Plugin adds a new payment method to your WooCommerce stor
 
 - **Account Details Input**: Allows customers to enter their John Deere account number and other details during checkout.
 
+- **Customization**: The admin can customize the default order status, and change the default labels, instructions, and descriptions.
+
 - **Validation**: Validates the account number input during checkout, registration and edit user account detail
 
 - **Email Instructions**: Adds instructions for the John Deere payment method to the order confirmation email.
