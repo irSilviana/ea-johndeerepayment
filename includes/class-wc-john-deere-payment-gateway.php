@@ -100,6 +100,49 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
         'default'     => 'Your order will be paid with John Deere Financial Multi-Use Line',
         'desc_tip'    => true,
       ),
+      // Front end fields
+      'account_name' => array(
+        'title'       => __('Account Name', 'john-deere-payment'),
+        'type'        => 'text',
+        'description' => __('This controls the account name field which the user sees during checkout.', 'john-deere-payment'),
+        'default'     => __('Name on the account', 'john-deere-payment'),
+        'desc_tip'    => true,
+      ),
+      'account_number' => array(
+        'title'       => __('Account Number', 'john-deere-payment'),
+        'type'        => 'text',
+        'description' => __('This controls the account number field which the user sees during checkout.', 'john-deere-payment'),
+        'default'     => __('John Deere Multi-Use Account Number', 'john-deere-payment'),
+        'desc_tip'    => true,
+      ),
+      'regular_limit_line' => array(
+        'title'       => __('Regular Limit Line', 'john-deere-payment'),
+        'type'        => 'text',
+        'description' => __('This controls the title for Regular Limit Line field.', 'john-deere-payment'),
+        'default'     => __('Regular Limit Line', 'john-deere-payment'),
+        'desc_tip'    => true,
+      ),
+      'regular_limit_line_desc' => array(
+        'title'       => __('Regular Limit Line Description', 'john-deere-payment'),
+        'type'        => 'textarea',
+        'description' => __('This controls the description for Regular Limit Line field.', 'john-deere-payment'),
+        'default'     => __('I agree that this transaction will be billed to my John Deere Financial Multi-Use Line', 'john-deere-payment'),
+        'desc_tip'    => true,
+      ),
+      'special_term_limit_line' => array(
+        'title'       => __('Special Term Limit Line', 'john-deere-payment'),
+        'type'        => 'text',
+        'description' => __('This controls the title for Special Term Limit Line field.', 'john-deere-payment'),
+        'default'     => __('Special Term Limit Line', 'john-deere-payment'),
+        'desc_tip'    => true,
+      ),
+      'special_term_limit_line_desc' => array(
+        'title'       => __('Special Term Limit Line Description', 'john-deere-payment'),
+        'type'        => 'textarea',
+        'description' => __('This controls the description for Special Term Limit Line field.', 'john-deere-payment'),
+        'default'     => __('I agree this transaction will be applied to my John Deere Financial Multi-Use Line.', 'john-deere-payment'),
+        'desc_tip'    => true,
+      ),
 
     );
   }
@@ -178,6 +221,14 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     $jd_account_name = get_user_meta($user_id, 'jd_account_name', true); // Get the account name
     $jd_payment_option = get_user_meta($user_id, 'jd_payment_option', true); // Get the payment option
 
+    // Get the setting values
+    $account_name_label = (!empty($this->get_option('account_name'))) ? $this->get_option('account_name') : 'Name on the account';
+    $account_number_label = (!empty($this->get_option('account_number'))) ? $this->get_option('account_number') : 'John Deere Multi-Use Account Number';
+    $regular_limit_line =   (!empty($this->get_option('regular_limit_line'))) ? $this->get_option('regular_limit_line') : 'Regular Limit Line';
+    $special_term_limit_line = (!empty($this->get_option('special_term_limit_line'))) ? $this->get_option('special_term_limit_line') : 'Special Term Limit Line';
+    $regular_limit_line_desc =  (!empty($this->get_option('regular_limit_line_desc'))) ? $this->get_option('regular_limit_line_desc') : 'I agree that this transaction will be billed to my John Deere Financial Multi-Use Line';
+    $special_term_limit_line_desc =  (!empty($this->get_option('special_term_limit_line_desc'))) ? $this->get_option('special_term_limit_line_desc') : 'I agree this transaction will be applied to my John Deere Financial Multi-Use Line';
+
 ?>
     <div id="john_deere_payment_fields">
       <h3><?php _e('John Deere Payment Details', 'john-deere-payment') ?></h3>
@@ -186,7 +237,7 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
       woocommerce_form_field('jd_account_name', array(
         'type'          => 'text',
         'class'         => array('jd-account-name form-row-wide'),
-        'label'         => __('Name on the account', 'john-deere-payment'),
+        'label'         => __($account_name_label, 'john-deere-payment'),
         'required'      => true,
         'default'       => $jd_account_name ? $jd_account_name : ''
       ));
@@ -195,7 +246,7 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
       woocommerce_form_field('jd_account_number', array(
         'type'          => 'number',
         'class'         => array('jd-account-number form-row-wide'),
-        'label'         => __('John Deere Multi-Use Account Number', 'john-deere-payment'),
+        'label'         => __($account_number_label, 'john-deere-payment'),
         'required'      => true,
         'default'       => $jd_account_number ? $jd_account_number : ''
       ));
@@ -206,8 +257,8 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
         'class'         => array('jd-payment-option form-row-wide', 'jd-custom-grid'),
         'label'         => __('Choose your payment option', 'john-deere-payment'),
         'options'       => array(
-          'Regular Limit Line' => __('Regular Limit Line. <br><span style="font-size:0.9rem">I agree that this transaction will be billed to my John Deere Financial Multi-Use Line</span>', 'john-deere-payment'),
-          'Special Term Limit Line' => __('Special Term Limit Line. <br><span style="font-size:0.9rem">I agree this transaction will be applied to my John Deere Financial Multi-Use Line.</span>', 'john-deere-payment'),
+          'Regular Limit Line' => __($regular_limit_line . '<br><span style="font-size:0.9rem">' . $regular_limit_line_desc . '</span>', 'john-deere-payment'),
+          'Special Term Limit Line' => __($special_term_limit_line . '<br><span style="font-size:0.9rem">' . $special_term_limit_line_desc . '</span>', 'john-deere-payment'),
         ),
         'required'      => true,
         'default'       => $jd_payment_option ? $jd_payment_option : ''
