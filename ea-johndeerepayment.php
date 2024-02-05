@@ -53,6 +53,24 @@ function ea_john_deere_admin_enqueue_styles()
   wp_enqueue_style('ea-john-deere-admin-styles');
 }
 
+// Add the filter inside your main plugin file
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'ea_john_deere_add_plugin_page_settings_link');
+
+function ea_john_deere_add_plugin_page_settings_link($links)
+{
+  // Build and escape the URL.
+  $url = esc_url(add_query_arg(
+    'page',
+    'wc-settings&tab=checkout&section=john_deere_payment',
+    get_admin_url() . 'admin.php'
+  ));
+  // Create the link.
+  $settings_link = "<a href='$url'>" . __('Settings', 'john-deere-payment') . '</a>';
+  // Adds the link to the end of the array.
+  array_push($links, $settings_link);
+  return $links;
+}
+
 // Add the payment gateway
 add_action('plugins_loaded', 'init_john_deere_payment_gateway', 0);
 function init_john_deere_payment_gateway()

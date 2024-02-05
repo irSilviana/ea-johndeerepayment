@@ -140,7 +140,7 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
         'title'       => __('Special Term Limit Line Description', 'john-deere-payment'),
         'type'        => 'textarea',
         'description' => __('This controls the description for Special Term Limit Line field.', 'john-deere-payment'),
-        'default'     => __('I agree this transaction will be applied to my John Deere Financial Multi-Use Line.', 'john-deere-payment'),
+        'default'     => __('I agree this transaction will be applied to my John Deere Financial Multi-Use Line', 'john-deere-payment'),
         'desc_tip'    => true,
       ),
 
@@ -244,7 +244,7 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
 
       // Add the input field for the account number
       woocommerce_form_field('jd_account_number', array(
-        'type'          => 'number',
+        'type'          => 'text',
         'class'         => array('jd-account-number form-row-wide'),
         'label'         => __($account_number_label, 'john-deere-payment'),
         'required'      => true,
