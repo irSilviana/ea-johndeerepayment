@@ -195,7 +195,6 @@ function handle_jd_account_request()
   $username = $user_info->user_login;
 
   // Retrieve the value of the jd_account_enabled checkbox
-  // $jd_account_enabled = isset($_POST['jd_account_enabled']) ? intval($_POST['jd_account_enabled']) : 0;
   $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true);
 
   $status = $jd_account_enabled ? 'disable' : 'enable';
@@ -248,12 +247,17 @@ function display_jd_account_request_notification()
   // If the jd_account_request_pending option is set, display a warning message
   $user_id = get_option('jd_account_request_pending');
 
+  // Retrieve the value of the jd_account_enabled checkbox
+  $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true);
+
+  $status = $jd_account_enabled ? 'disable' : 'enable';
+
   if ($user_id) {
     $user = get_userdata($user_id);
   ?>
     <div class="notice notice-warning is-dismissible">
       <p>
-        <?php printf(__('User <a href="%s">%s</a> (%s) has requested to enable or disable their John Deere account. Please check your email for more details.', 'john-deere-payment'), get_edit_user_link($user_id), $user->display_name, $user->user_email); ?>
+        <?php printf(__('User <a href="%s">%s</a> (%s) has requested to <strong><a href="%s">%s</a></strong> their John Deere account. Please check your email for more details.', 'john-deere-payment'), get_edit_user_link($user_id), $user->display_name, $user->user_email, admin_url('user-edit.php?user_id=' . $user_id . '#section-payment-john-deere'), $status); ?>
       </p>
     </div>
   <?php
@@ -304,28 +308,30 @@ function add_custom_fields_to_user_admin_page($user)
   $jd_payment_option = get_the_author_meta('jd_payment_option', $user->ID);
   $jd_account_enabled = get_the_author_meta('jd_account_enabled', $user->ID);
   ?>
-  <h3><?php _e('John Deere Account Details', 'john-deere-payment'); ?></h3>
-  <table class="form-table">
-    <tr>
-      <th><label for="jd_account_enabled"><?php _e('Enable / Disable John Deere Account', 'john-deere-payment'); ?></label></th>
-      <td><input type="checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" <?php checked($jd_account_enabled, 1); ?> /></td>
-    </tr>
-    <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
-      <th><label for="jd_account_name"><?php _e('Account Name', 'john-deere-payment'); ?></label></th>
-      <td><input type="text" name="jd_account_name" id="jd_account_name" value="<?php echo esc_attr($jd_account_name); ?>" class="regular-text" /></td>
-    </tr>
-    <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
-      <th><label for="jd_account_number"><?php _e('Account Number', 'john-deere-payment'); ?></label></th>
-      <td><input type="text" name="jd_account_number" id="jd_account_number" value="<?php echo esc_attr($jd_account_number); ?>" class="regular-text" /></td>
-    </tr>
-    <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
-      <th><label><?php _e('Payment Option', 'john-deere-payment'); ?></label></th>
-      <td>
-        <input type="radio" name="jd_payment_option" value="Regular Limit Line" <?php checked($jd_payment_option, 'Regular Limit Line'); ?>> <?php _e('Regular Limit Line', 'john-deere-payment') ?><br>
-        <input type="radio" name="jd_payment_option" value="Special Term Limit Line" <?php checked($jd_payment_option, 'Special Term Limit Line'); ?>> <?php _e('Special Term Limit Line', 'john-deere-payment') ?>
-      </td>
-    </tr>
-  </table>
+  <div id="section-payment-john-deere">
+    <h3><?php _e('John Deere Account Details', 'john-deere-payment'); ?></h3>
+    <table class="form-table">
+      <tr>
+        <th><label for="jd_account_enabled"><?php _e('Enable / Disable John Deere Account', 'john-deere-payment'); ?></label></th>
+        <td><input type="checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" <?php checked($jd_account_enabled, 1); ?> /></td>
+      </tr>
+      <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
+        <th><label for="jd_account_name"><?php _e('Account Name', 'john-deere-payment'); ?></label></th>
+        <td><input type="text" name="jd_account_name" id="jd_account_name" value="<?php echo esc_attr($jd_account_name); ?>" class="regular-text" /></td>
+      </tr>
+      <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
+        <th><label for="jd_account_number"><?php _e('Account Number', 'john-deere-payment'); ?></label></th>
+        <td><input type="text" name="jd_account_number" id="jd_account_number" value="<?php echo esc_attr($jd_account_number); ?>" class="regular-text" /></td>
+      </tr>
+      <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
+        <th><label><?php _e('Payment Option', 'john-deere-payment'); ?></label></th>
+        <td>
+          <input type="radio" name="jd_payment_option" value="Regular Limit Line" <?php checked($jd_payment_option, 'Regular Limit Line'); ?>> <?php _e('Regular Limit Line', 'john-deere-payment') ?><br>
+          <input type="radio" name="jd_payment_option" value="Special Term Limit Line" <?php checked($jd_payment_option, 'Special Term Limit Line'); ?>> <?php _e('Special Term Limit Line', 'john-deere-payment') ?>
+        </td>
+      </tr>
+    </table>
+  </div>
   <script type="text/javascript">
     document.getElementById('jd_account_enabled').addEventListener('change', function() {
       var display = this.checked ? '' : 'none';
