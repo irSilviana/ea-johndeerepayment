@@ -65,6 +65,23 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
         'type'        => 'checkbox',
         'default'     => 'no'
       ),
+      'jd_account_mode' => array(
+        'title'       => __('John Deere Account Mode', 'john-deere-payment'),
+        'type'        => 'select',
+        'description' => __('Choose the general mode of the John Deere payment method. 
+        <p>
+       <strong>Preselected Users</strong>: Only users who are preselected will be able to use the John Deere payment method. <br/>
+        <strong>Enabled Users</strong>: All users who have the John Deere account enabled will be able to use the John Deere payment method. <br/>
+       <strong> All Users</strong>: All users will be able to use the John Deere payment method.
+        </p>
+        ', 'john-deere-payment'),
+        'default'     => 'preselected_users',
+        'options'     => array(
+          'preselected_users' => __('Preselected Users (Recommended)', 'john-deere-payment'),
+          'enabled_users' => __('All Users with JD Account Enabled', 'john-deere-payment'),
+          'all_users' => __('All Users', 'john-deere-payment'),
+        ),
+      ),
       'title' => array(
         'title'       => __('Title', 'john-deere-payment'),
         'type'        => 'safe_text',
@@ -216,7 +233,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
   public function payment_fields()
   {
     $user_id = get_current_user_id(); // Get the ID of the current user
-    $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true); // Get the enabled status of the John Deere account
     $jd_account_number = get_user_meta($user_id, 'jd_account_number', true); // Get the account number
     $jd_account_name = get_user_meta($user_id, 'jd_account_name', true); // Get the account name
     $jd_payment_option = get_user_meta($user_id, 'jd_payment_option', true); // Get the payment option
@@ -228,6 +244,21 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     $special_term_limit_line = (!empty($this->get_option('special_term_limit_line'))) ? $this->get_option('special_term_limit_line') : 'Special Term Limit Line';
     $regular_limit_line_desc =  (!empty($this->get_option('regular_limit_line_desc'))) ? $this->get_option('regular_limit_line_desc') : 'I agree that this transaction will be billed to my John Deere Financial Multi-Use Line';
     $special_term_limit_line_desc =  (!empty($this->get_option('special_term_limit_line_desc'))) ? $this->get_option('special_term_limit_line_desc') : 'I agree this transaction will be applied to my John Deere Financial Multi-Use Line';
+
+    $jd_account_mode = $this->get_option('jd_account_mode'); // Get the John Deere account mode
+    $user_id = get_current_user_id(); // Get the ID of the current user
+    $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true); // Get the enabled status of the John Deere account
+
+    if ($jd_account_mode == 'preselected_users' && !$jd_account_enabled) {
+      // Don't display the payment fields for users who are not preselected
+      echo '<p>' . __('The John Deere Payment method is not enabled for your account. Please contact the Admin.', 'john-deere-payment') . '</p>';
+      return;
+    } elseif ($jd_account_mode == 'enabled_users' && !$jd_account_enabled) {
+      // Don't display the payment fields for users who don't have the John Deere account enabled
+      echo '<p>' . __('The John Deere Payment method should be enabled for your account. Please login and have it enabled.', 'john-deere-payment') . '</p>';
+      return;
+    }
+
 
 ?>
     <div id="john_deere_payment_fields">
@@ -261,8 +292,11 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
           'Special Term Limit Line' => __($special_term_limit_line . '<br><span style="font-size:0.9rem">' . $special_term_limit_line_desc . '</span>', 'john-deere-payment'),
         ),
         'required'      => true,
-        'default'       => $jd_payment_option ? $jd_payment_option : ''
+        'default'       => $jd_payment_option
       ));
+
+
+
       ?>
     </div>
 <?php

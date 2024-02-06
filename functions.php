@@ -112,18 +112,48 @@ function save_custom_field_from_registration_form($customer_id)
 add_action('woocommerce_edit_account_form', 'add_custom_fields_to_edit_account_form');
 function add_custom_fields_to_edit_account_form()
 {
+  $jd_account_mode = get_option('woocommerce_john_deere_payment_settings')['jd_account_mode']; // Get the John Deere account mode
   $user_id = get_current_user_id();
+  $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true);
   $jd_account_number = get_user_meta($user_id, 'jd_account_number', true);
   $jd_account_name = get_user_meta($user_id, 'jd_account_name', true);
   $jd_payment_option = get_user_meta($user_id, 'jd_payment_option', true);
-  $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true);
+  $jd_account_request_sent = get_user_meta($user_id, 'jd_account_request_sent', true); // Get the request sent status
 
   echo '<h3>' . __('John Deere Financial Multi-Use Line',  'john-deere-payment') . '</h3>';
 ?>
   <fieldset>
     <legend><?php _e('John Deere Account Details',  'john-deere-payment'); ?></legend>
     <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-      <input type="checkbox" class="woocommerce-Input woocommerce-Input--checkbox input-checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" <?php checked($jd_account_enabled, 1); ?> /> <?php _e('Show / hide John Deere Account ',  'john-deere-payment') ?>
+      <?php
+      $checked = checked($jd_account_enabled, 1, false);
+      $disabled = ($jd_account_mode === 'preselected_users') ? 'disabled' : '';
+
+
+      if ($jd_account_mode === 'preselected_users') {
+        $status_text = $jd_account_enabled ? __('Enabled', 'john-deere-payment') : __('Disabled', 'john-deere-payment');
+        echo '<p>' . __('John Deere Account Status: ', 'john-deere-payment') . '<strong>' . $status_text . '</strong></p>';
+      } else {
+        $checked = checked($jd_account_enabled, 1, false);
+        echo '<input type="checkbox" class="woocommerce-Input woocommerce-Input--checkbox input-checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" ' . $checked . ' /> ' . __('Enable / Disable John Deere Account ', 'john-deere-payment');
+      }
+
+      // Check if a request has been sent and if the account status has been changed
+      $button_disabled = $jd_account_request_sent   ? ' disabled' : '';
+      $button_text_disable = $jd_account_enabled   ? 'disable' : 'enable';
+      $button_text = $jd_account_request_sent  ? __('Wait for the admin response', 'john-deere-payment') : __('Request to ' . $button_text_disable . ' John Deere Payment', 'john-deere-payment');
+
+      if ($jd_account_mode === 'preselected_users') {
+        echo '<button type="submit" name="jd_account_request" value="1" style="font-size: 14px; padding:5px;"' . $button_disabled .
+          '>' . $button_text . '</button>';
+      }
+
+      // If the account status has been changed, remove the user meta value
+      if ($jd_account_request_sent && $jd_account_enabled) {
+        delete_user_meta($user_id, 'jd_account_request_sent');
+      }
+
+      ?>
     </p>
     <div id="jd_account_details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
       <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -146,7 +176,39 @@ function add_custom_fields_to_edit_account_form()
       document.getElementById('jd_account_details').style.display = this.checked ? '' : 'none';
     });
   </script>
-<?php
+  <?php
+}
+
+/**
+ * Handle the John Deere account request
+ */
+add_action('woocommerce_save_account_details', 'handle_jd_account_request');
+function handle_jd_account_request()
+{
+  // If the jd_account_request button was not clicked, return immediately
+  if (!isset($_POST['jd_account_request'])) {
+    return;
+  }
+
+  $user_id = get_current_user_id(); // Get the ID of the current user
+  $user_info = get_userdata($user_id);
+  $username = $user_info->user_login;
+
+  // Retrieve the value of the jd_account_enabled checkbox
+  $jd_account_enabled = isset($_POST['jd_account_enabled']) ? intval($_POST['jd_account_enabled']) : 0;
+
+  $status = $jd_account_enabled ? 'disable' : 'enable';
+
+  send_jd_account_request_email($user_id, $username, $status);
+
+  // Add a success notice
+  wc_add_notice(__('Your request has been successfully sent to the admin.', 'john-deere-payment'), 'success');
+
+  // Set a new user meta value
+  update_user_meta(get_current_user_id(), 'jd_account_request_sent', true);
+
+  // Store the user's ID in the jd_account_request_pending option
+  update_option('jd_account_request_pending', get_current_user_id());
 }
 
 /**
@@ -155,11 +217,15 @@ function add_custom_fields_to_edit_account_form()
 add_action('woocommerce_save_account_details', 'save_jd_account_enabled');
 function save_jd_account_enabled($user_id)
 {
-  if (isset($_POST['jd_account_enabled'])) {
-    update_user_meta($user_id, 'jd_account_enabled', 1);
-  } else {
-    delete_user_meta($user_id, 'jd_account_enabled');
+  $jd_account_mode = get_option('woocommerce_john_deere_payment_settings')['jd_account_mode']; // Get the John Deere account mode
+  if ($jd_account_mode !== 'preselected_users') {
+    if (isset($_POST['jd_account_enabled'])) {
+      update_user_meta($user_id, 'jd_account_enabled', 1);
+    } else {
+      delete_user_meta($user_id, 'jd_account_enabled');
+    }
   }
+
   if (isset($_POST['jd_account_number']) && (is_numeric($_POST['jd_account_number']) || $_POST['jd_account_number'] === '')) {
     update_user_meta($user_id, 'jd_account_number', sanitize_text_field($_POST['jd_account_number']));
   }
@@ -172,6 +238,59 @@ function save_jd_account_enabled($user_id)
 }
 
 /**
+ * Display a notification in the admin area when a user requests to enable / disable their John Deere account
+ */
+add_action('admin_notices', 'display_jd_account_request_notification');
+function display_jd_account_request_notification()
+{
+  // If the jd_account_request_pending option is set, display a warning message
+  $user_id = get_option('jd_account_request_pending');
+
+  if ($user_id) {
+    $user = get_userdata($user_id);
+  ?>
+    <div class="notice notice-warning is-dismissible">
+      <p>
+        <?php printf(__('User <a href="%s">%s</a> (%s) has requested to enable or disable their John Deere account. Please check your email for more details.', 'john-deere-payment'), get_edit_user_link($user_id), $user->display_name, $user->user_email); ?>
+      </p>
+    </div>
+  <?php
+  }
+
+  // If the jd_account_request_updated option is set, display a success message and delete the option
+  if (get_option('jd_account_request_updated')) {
+    delete_option('jd_account_request_updated');
+  ?>
+    <div class="notice notice-success is-dismissible">
+      <p><?php _e('The John Deere account status has been successfully updated.', 'john-deere-payment'); ?></p>
+    </div>
+  <?php
+  }
+}
+
+
+function send_jd_account_request_email($user_id, $username, $status)
+{
+  $to = get_option('admin_email'); // Get the admin email
+  $subject = __('John Deere Account Request', 'john-deere-payment');
+
+  // Load the email template
+  ob_start();
+  include plugin_dir_path(__FILE__) . 'email-template.php';
+  $template = ob_get_clean();
+
+  // Replace the placeholders with the actual values
+  $message = str_replace(array('{user_id}', '{username}', '{status}'), array($user_id, $username, $status), $template);
+
+  // Set the email headers
+  $headers = array('Content-Type: text/html; charset=UTF-8');
+
+  // Send the email
+  wp_mail($to, $subject, $message, $headers);
+}
+
+
+/**
  * Add custom fields to the user admin page
  */
 add_action('show_user_profile', 'add_custom_fields_to_user_admin_page');
@@ -182,11 +301,11 @@ function add_custom_fields_to_user_admin_page($user)
   $jd_account_name = get_the_author_meta('jd_account_name', $user->ID);
   $jd_payment_option = get_the_author_meta('jd_payment_option', $user->ID);
   $jd_account_enabled = get_the_author_meta('jd_account_enabled', $user->ID);
-?>
+  ?>
   <h3><?php _e('John Deere Account Details', 'john-deere-payment'); ?></h3>
   <table class="form-table">
     <tr>
-      <th><label for="jd_account_enabled"><?php _e('Show / hide John Deere Account', 'john-deere-payment'); ?></label></th>
+      <th><label for="jd_account_enabled"><?php _e('Enable / Disable John Deere Account', 'john-deere-payment'); ?></label></th>
       <td><input type="checkbox" name="jd_account_enabled" id="jd_account_enabled" value="1" <?php checked($jd_account_enabled, 1); ?> /></td>
     </tr>
     <tr class="jd-account-details" style="display: <?php echo $jd_account_enabled ? '' : 'none'; ?>;">
@@ -224,16 +343,24 @@ add_action('edit_user_profile_update', 'save_john_deere_fields_from_user_admin_p
 function save_john_deere_fields_from_user_admin_page($user_id)
 {
   if (current_user_can('edit_user', $user_id)) {
+    // Update the jd_account_enabled value
     update_user_meta($user_id, 'jd_account_enabled', isset($_POST['jd_account_enabled']) ? 1 : 0);
+
     if (isset($_POST['jd_account_number']) && (is_numeric($_POST['jd_account_number']) || $_POST['jd_account_number'] === '')) {
       update_user_meta($user_id, 'jd_account_number', sanitize_text_field($_POST['jd_account_number']));
     }
+
     if (isset($_POST['jd_account_name'])) {
       update_user_meta($user_id, 'jd_account_name', sanitize_text_field($_POST['jd_account_name']));
     }
+
     if (isset($_POST['jd_payment_option'])) {
       update_user_meta($user_id, 'jd_payment_option', sanitize_text_field($_POST['jd_payment_option']));
     }
+
+    // Set a new option to indicate that the jd_account_enabled value has been updated
+    update_option('jd_account_request_updated', true);
+    update_option('jd_account_request_pending', false);
   }
 }
 
@@ -260,7 +387,7 @@ function jd_woocommerce_form_field($key, $args, $value = null)
     $field .= '<legend>' . wp_kses_post($args['label']) . '</legend>';
 
     foreach ($args['options'] as $option_key => $option_value) {
-      $field .= '<label><input type="radio" name="' . esc_attr($key) . '" value="' . esc_attr($option_key) . '"' . checked($value, $option_key, false) . ' /> ' . $option_value . '</label><br />';
+      $field .= '<label><input type="radio" name="' . esc_attr($key) . '" value="' . esc_attr($option_key) . '"' . checked($args['default'], $option_key, false) . ' /> ' . $option_value . '</label><br />';
     }
 
     $field .= '</fieldset>';
@@ -271,10 +398,10 @@ function jd_woocommerce_form_field($key, $args, $value = null)
   return $field;
 }
 
-
 /**
  * Add custom fields to the email
  */
+add_action('woocommerce_email_order_meta', 'add_john_deere_payment_details_to_email', 10, 4);
 function add_john_deere_payment_details_to_email($order, $sent_to_admin, $plain_text, $email)
 {
   // Check if the order has the John Deere payment details
@@ -296,13 +423,10 @@ function add_john_deere_payment_details_to_email($order, $sent_to_admin, $plain_
   }
 }
 
-add_action('woocommerce_email_order_meta', 'add_john_deere_payment_details_to_email', 10, 4);
-
-
-
 /**
  * Display custom fields in the order details page
  */
+add_action('woocommerce_order_details_after_order_table', 'display_john_deere_details_on_order_view');
 function display_john_deere_details_on_order_view($order)
 {
   // Check if the order has the John Deere details
@@ -325,4 +449,24 @@ function display_john_deere_details_on_order_view($order)
   }
 }
 
-add_action('woocommerce_order_details_after_order_table', 'display_john_deere_details_on_order_view');
+/**
+ * Extra setting for preselected_users mode
+ * Payment method only visible for the preselected users
+ */
+add_filter('woocommerce_available_payment_gateways', 'filter_payment_gateways');
+function filter_payment_gateways($gateways)
+{
+  $jd_account_mode = get_option('woocommerce_john_deere_payment_settings')['jd_account_mode']; // Get the John Deere account mode
+
+  if ($jd_account_mode == 'preselected_users') {
+    $user_id = get_current_user_id(); // Get the ID of the current user
+    $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true); // Get the enabled status of the John Deere account
+
+    // If the John Deere account is not enabled for the user, unset the John Deere payment gateway
+    if (!$jd_account_enabled && isset($gateways['john_deere_payment'])) {
+      unset($gateways['john_deere_payment']);
+    }
+  }
+
+  return $gateways;
+}
