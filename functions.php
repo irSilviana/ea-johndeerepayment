@@ -282,11 +282,10 @@ function send_jd_account_request_email($user_id, $username, $status)
   $to = get_option('jd_admin_email'); // Get the admin email
 
   // Check if the admin email is valid
-  if (!is_email($to)) {
-    // If the admin email is not valid, fall back to the default admin email
-    $to = get_option('admin_email');
-  }
-
+  // if (!is_email($to)) {
+  //   // If the admin email is not valid, fall back to the default admin email
+  //   $to = get_option('admin_email');
+  // }
 
   $subject = __('John Deere Account Request', 'john-deere-payment');
 
