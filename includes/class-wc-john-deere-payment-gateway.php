@@ -58,6 +58,16 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
    */
   public function init_form_fields()
   {
+    // Get all users with the role 'administrator'
+    $admins = get_users(array('role' => 'administrator'));
+
+    // Prepare an array of admin email addresses
+    $admin_emails = array();
+    foreach ($admins as $admin) {
+      $admin_emails[$admin->user_email] = $admin->user_email;
+    }
+
+
     $this->form_fields = array(
       'enabled' => array(
         'title'       => __('Enable/Disable', 'john-deere-payment'),
@@ -84,9 +94,10 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
       ),
       'admin_email' => array(
         'title'       => __('Admin Email', 'domain'), // Replace 'domain' with your text domain
-        'type'        => 'email',
-        'description' => __('Enter the email address of the admin.', 'domain'), // Replace 'domain' with your text domain
+        'type'        => 'select',
+        'description' => __('Select the email address of the admin.', 'domain'), // Replace 'domain' with your text domain
         'default'     => get_option('admin_email'), // Default value is the current admin email
+        'options'     => $admin_emails, // Options for the dropdown
       ),
       'title' => array(
         'title'       => __('Title', 'john-deere-payment'),
