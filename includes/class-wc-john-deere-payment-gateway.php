@@ -92,7 +92,7 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
           'all_users' => __('All Users', 'john-deere-payment'),
         ),
       ),
-      'admin_email' => array(
+      'jd_admin_email' => array(
         'title'       => __('Admin Email', 'domain'), // Replace 'domain' with your text domain
         'type'        => 'select',
         'description' => __('Select the email address of the admin.', 'domain'), // Replace 'domain' with your text domain
