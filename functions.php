@@ -197,7 +197,7 @@ function handle_jd_account_request()
   // Retrieve the value of the jd_account_enabled checkbox
   $jd_account_enabled = isset($_POST['jd_account_enabled']) ? intval($_POST['jd_account_enabled']) : 0;
 
-  $status = $jd_account_enabled ? 'enable' : 'disable';
+  $status = !$jd_account_enabled ? ' enable' : 'disable';
 
   // Send an email to the admin
   send_jd_account_request_email($user_id, $username, $status);
