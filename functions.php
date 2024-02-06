@@ -195,9 +195,10 @@ function handle_jd_account_request()
   $username = $user_info->user_login;
 
   // Retrieve the value of the jd_account_enabled checkbox
-  $jd_account_enabled = isset($_POST['jd_account_enabled']) ? intval($_POST['jd_account_enabled']) : 0;
+  // $jd_account_enabled = isset($_POST['jd_account_enabled']) ? intval($_POST['jd_account_enabled']) : 0;
+  $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true);
 
-  $status = !$jd_account_enabled ? ' enable' : 'disable';
+  $status = $jd_account_enabled ? 'disable' : 'enable';
 
   // Send an email to the admin
   send_jd_account_request_email($user_id, $username, $status);
