@@ -274,10 +274,20 @@ function display_jd_account_request_notification()
   }
 }
 
-
+/**
+ * Send an email to the admin when a user requests to enable / disable their John Deere account
+ */
 function send_jd_account_request_email($user_id, $username, $status)
 {
   $to = get_option('admin_email'); // Get the admin email
+
+  // Check if the admin email is valid
+  if (!is_email($to)) {
+    // If the admin email is not valid, fall back to the default admin email
+    $to = get_option('admin_email');
+  }
+
+
   $subject = __('John Deere Account Request', 'john-deere-payment');
 
   // Load the email template
@@ -407,7 +417,7 @@ function jd_woocommerce_form_field($key, $args, $value = null)
 }
 
 /**
- * Add custom fields to the email
+ * Add custom fields to the order email
  */
 add_action('woocommerce_email_order_meta', 'add_john_deere_payment_details_to_email', 10, 4);
 function add_john_deere_payment_details_to_email($order, $sent_to_admin, $plain_text, $email)
