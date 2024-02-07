@@ -69,8 +69,14 @@ function add_john_deere_custom_field_to_registration_form()
     <p class="form-row form-row-wide">
       <label><?php _e('John Deere Payment Option',  'john-deere-payment'); ?> </label>
     <div class="john-deere-options">
-      <input type="radio" name="jd_payment_option" value="Regular Limit Line" checked> <?php _e('Regular Limit Line.', 'john-deere-payment') ?> <span style="font-size: 14px; display:inline-block"><?php _e('I agree that this transaction will be billed to my John Deere Financial Multi-Use Line', 'john-deere-payment') ?></span>
-      <input type="radio" name="jd_payment_option" value="Special Term Limit Line"><?php _e(' Special Term Limit Line.', 'john-deere-payment') ?><span style="font-size: 14px; display:inline-block"><?php _e('I agree this transaction will be applied to my John Deere Financial Multi-Use Line.', 'john-deere-payment') ?></span>
+      <ul>
+        <li>
+          <input type="radio" name="jd_payment_option" value="Regular Limit Line" checked> <?php _e('Regular Limit Line.', 'john-deere-payment') ?> <span style="font-size: 14px; display:inline-block"><?php _e('I agree that this transaction will be billed to my John Deere Financial Multi-Use Line', 'john-deere-payment') ?></span>
+        </li>
+        <li>
+          <input type="radio" name="jd_payment_option" value="Special Term Limit Line"><?php _e(' Special Term Limit Line.', 'john-deere-payment') ?><span style="font-size: 14px; display:inline-block"><?php _e('I agree this transaction will be applied to my John Deere Financial Multi-Use Line.', 'john-deere-payment') ?></span>
+        </li>
+      </ul>
     </div>
     </p>
   </div>

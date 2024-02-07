@@ -30,6 +30,12 @@ fieldset#jd_payment_option {
   border: 1px solid red;
 }
 
-.john-deere-options > input {
+.john-deere-options > ul {
   margin-top: 20px;
+  padding-left: 0;
+}
+
+.john-deere-options li {
+  list-style: none;
+  margin-bottom: 10px;
 }
