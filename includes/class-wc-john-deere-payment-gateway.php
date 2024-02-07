@@ -31,6 +31,7 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     $this->enabled        = $this->get_option('enabled');
     $this->description    = $this->get_option('description');
     $this->instructions   = $this->get_option('instructions');
+    $this->jd_admin_email = $this->get_option('jd_admin_email');
 
     // Actions.
     add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
@@ -52,6 +53,9 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     $this->method_description = 'Allows payments with John Deere Financial Multi-Use Line';
     $this->has_fields         = true;
   }
+
+
+
 
   /**
    * Initialise Gateway Settings Form Fields.
@@ -93,9 +97,9 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
         ),
       ),
       'jd_admin_email' => array(
-        'title'       => __('Admin Email', 'domain'), // Replace 'domain' with your text domain
+        'title'       => __('Admin Email', 'john-deere-payment'),
         'type'        => 'select',
-        'description' => __('Select the email address of the admin.', 'domain'), // Replace 'domain' with your text domain
+        'description' => __('Select the email address of the admin.', 'john-deere-payment'),
         'default'     => get_option('admin_email'), // Default value is the current admin email
         'options'     => $admin_emails, // Options for the dropdown
       ),

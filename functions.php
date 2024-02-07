@@ -279,12 +279,14 @@ function display_jd_account_request_notification()
  */
 function send_jd_account_request_email($user_id, $username, $status)
 {
-  $to = get_option('jd_admin_email'); // Get the admin email
+  $settings = get_option('woocommerce_john_deere_payment_settings'); // Get the plugin settings
+  $jd_admin_email = $settings['jd_admin_email'];  // Get the admin email
 
   // Check if the admin email is valid
-  if (!is_email($to)) {
+  if (!is_email($jd_admin_email)) {
+
     // If the admin email is not valid, fall back to the default admin email
-    $to = get_option('admin_email');
+    $jd_admin_email = get_option('admin_email');
   }
 
   $subject = __('John Deere Account Request', 'john-deere-payment');
@@ -301,7 +303,7 @@ function send_jd_account_request_email($user_id, $username, $status)
   $headers = array('Content-Type: text/html; charset=UTF-8');
 
   // Send the email
-  wp_mail($to, $subject, $message, $headers);
+  wp_mail($jd_admin_email, $subject, $message, $headers);
 }
 
 
