@@ -1,7 +1,10 @@
 # John Deere Payment Plugin for WooCommerce
 
 This is a custom payment gateway for WooCommerce that allows users to pay with their John Deere account.
-![Logo John Deere Multi-Use Account](image.png)
+
+<p align="center">
+  <img src="assets\images\john-deere-logo.png" alt="Logo John Deere Multi-Use Account">
+</p>
 
 ## Table of Contents
 
