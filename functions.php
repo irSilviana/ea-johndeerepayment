@@ -83,7 +83,7 @@ function add_john_deere_custom_field_to_registration_form()
           <input type="radio" name="jd_payment_option" value="Regular Limit Line" checked> <?php _e($regular_limit_line, 'john-deere-payment') ?> <span style="font-size: 14px; display:inline-block"><?php _e($regular_limit_line_desc, 'john-deere-payment') ?></span>
         </li>
         <li>
-          <input type="radio" name="jd_payment_option" value="Special Term Limit Line"><?php _e($special_term_limit_line, 'john-deere-payment') ?><span style="font-size: 14px; display:inline-block"><?php _e($special_term_limit_line_desc, 'john-deere-payment') ?></span>
+          <input type="radio" name="jd_payment_option" value="Special Term Limit Line"> <?php _e($special_term_limit_line, 'john-deere-payment') ?><span style="font-size: 14px; display:inline-block"><?php _e($special_term_limit_line_desc, 'john-deere-payment') ?></span>
         </li>
       </ul>
     </div>
