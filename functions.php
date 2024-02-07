@@ -484,3 +484,58 @@ function filter_payment_gateways($gateways)
 
   return $gateways;
 }
+
+/**
+ * Add a custom bulk action to the users list
+ */
+add_filter('bulk_actions-users', 'add_bulk_action');
+function add_bulk_action($bulk_actions)
+{
+  $bulk_actions['enable_john_deere_account'] = __('Enable John Deere Account', 'john-deere-payment');
+  $bulk_actions['disable_john_deere_account'] = __('Disable John Deere Account', 'john-deere-payment');
+  return $bulk_actions;
+}
+
+/**
+ * Handle the custom bulk action
+ */
+add_filter('handle_bulk_actions-users', 'handle_bulk_action', 10, 3);
+function handle_bulk_action($redirect_to, $doaction, $user_ids)
+{
+  if ($doaction === 'enable_john_deere_account') {
+    foreach ($user_ids as $user_id) {
+      // Enable the John Deere account for the user
+      update_user_meta($user_id, 'jd_account_enabled', true);
+    }
+  } elseif ($doaction === 'disable_john_deere_account') {
+    foreach ($user_ids as $user_id) {
+      // Disable the John Deere account for the user
+      update_user_meta($user_id, 'jd_account_enabled', false);
+    }
+  }
+
+  return $redirect_to;
+}
+
+
+/**
+ * Add a custom column to the users list
+ */
+function add_john_deere_column($columns)
+{
+  $columns['john_deere_payment_status'] = 'John Deere Payment';
+  return $columns;
+}
+add_filter('manage_users_columns', 'add_john_deere_column');
+
+// Fill the new column with data
+function fill_john_deere_column($value, $column_name, $user_id)
+{
+  if ('john_deere_payment_status' == $column_name) {
+    // Replace this with the actual status of the John Deere payment for the user
+    $status = get_user_meta($user_id, 'jd_account_enabled', true);
+    return $status ? 'Enabled' : 'Disabled';
+  }
+  return $value;
+}
+add_filter('manage_users_custom_column', 'fill_john_deere_column', 10, 3);
