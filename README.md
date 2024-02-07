@@ -12,6 +12,8 @@ This is a custom payment gateway for WooCommerce that allows users to pay with t
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Screenshots](#screenshots)
+- [Internationalization](#Internationalization)
 - [Support](#support)
 - [License](#license)
 
@@ -75,12 +77,19 @@ In the WooCommerce settings, under the "Payments" tab, click on "John Deere Paym
 
 ## Screenshots
 
-<p align="center">
-  <img src="assets\images\JD-bulk-users.png" alt="John Deere bulk edit users">
+<div align="center">
   <img src="assets\images\JD-financial-multi-use-line-settings.png" alt="John Deere settings">
+   <p>John Deere Multi-Use Line Settings</p>
+
+  <img src="assets\images\JD-bulk-users.png" alt="John Deere bulk edit users">
+  <p>John Deere bulk edit users</p>
+
   <img src="assets\images\JD-Payment method - checkout page.png" alt="John Deere payment method checkout page">
+   <p>John Deere Checkout Page</p>
+  
   <img src="assets\images\JD-PreSelected User Mode-user account detail.png" alt="John Deere user account detail">
-</p>
+  <p>John Deere User Account Detail</p>
+</div>
 
 ## Internationalization
 
