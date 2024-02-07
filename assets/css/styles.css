@@ -26,7 +26,10 @@ fieldset#jd_payment_option {
   grid-row: span 2;
 }
 
-/* CSS code */
 #jd_account_number.invalid {
   border: 1px solid red;
+}
+
+.john-deere-options > input {
+  margin-top: 20px;
 }
