@@ -306,9 +306,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
         'required'      => true,
         'default'       => $jd_payment_option
       ));
-
-
-
       ?>
     </div>
 <?php
