@@ -37,4 +37,5 @@ fieldset#jd_payment_option {
 .john-deere-options li {
   list-style: none;
   margin-bottom: 10px;
+  display: inline-block;
 }

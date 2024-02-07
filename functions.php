@@ -76,14 +76,16 @@ function add_john_deere_custom_field_to_registration_form()
       <input type="text" class="input-text" name="jd_account_number" id="reg_jd_account_number" value="<?php if (!empty($_POST['jd_account_number'])) echo esc_attr($_POST['jd_account_number']); ?>" />
     </p>
     <p class="form-row form-row-wide">
-      <label><?php _e('John Deere Payment Option',  'john-deere-payment'); ?> </label>
+      <label><?php _e('John Deere Payment Option', 'john-deere-payment'); ?> </label>
     <div class="john-deere-options">
       <ul>
         <li>
-          <input type="radio" name="jd_payment_option" value="Regular Limit Line" checked> <?php _e($regular_limit_line, 'john-deere-payment') ?> <span style="font-size: 14px; display:inline-block"><?php _e($regular_limit_line_desc, 'john-deere-payment') ?></span>
+          <input type="radio" name="jd_payment_option" value="Regular Limit Line" checked> <?php _e($regular_limit_line, 'john-deere-payment') ?>
+          <p style="font-size: 14px;"><?php _e($regular_limit_line_desc, 'john-deere-payment') ?></p>
         </li>
         <li>
-          <input type="radio" name="jd_payment_option" value="Special Term Limit Line"> <?php _e($special_term_limit_line, 'john-deere-payment') ?><span style="font-size: 14px; display:inline-block"><?php _e($special_term_limit_line_desc, 'john-deere-payment') ?></span>
+          <input type="radio" name="jd_payment_option" value="Special Term Limit Line"> <?php _e($special_term_limit_line, 'john-deere-payment') ?>
+          <p style="font-size: 14px;"><?php _e($special_term_limit_line_desc, 'john-deere-payment') ?></p>
         </li>
       </ul>
     </div>
