@@ -54,16 +54,25 @@ function display_john_deere_payment_fields_admin($order)
 add_action('woocommerce_register_form', 'add_john_deere_custom_field_to_registration_form');
 function add_john_deere_custom_field_to_registration_form()
 {
+  // Get the setting values
+  $account_name_label = (!empty(get_option('account_name'))) ? get_option('account_name') : 'Name on the account';
+  $account_number_label = (!empty(get_option('account_number'))) ? get_option('account_number') : 'John Deere Multi-Use Account Number';
+  $regular_limit_line =   (!empty(get_option('regular_limit_line'))) ? get_option('regular_limit_line') : 'Regular Limit Line';
+  $special_term_limit_line = (!empty(get_option('special_term_limit_line'))) ? get_option('special_term_limit_line') : 'Special Term Limit Line';
+  $regular_limit_line_desc =  (!empty(get_option('regular_limit_line_desc'))) ? get_option('regular_limit_line_desc') : 'I agree that this transaction will be billed to my John Deere Financial Multi-Use Line';
+  $special_term_limit_line_desc =  (!empty(get_option('special_term_limit_line_desc'))) ? get_option('special_term_limit_line_desc') : 'I agree this transaction will be applied to my John Deere Financial Multi-Use Line';
+
+
 ?>
   <div class="john-deere-register-form">
     <p class="form-row form-row-wide">
     <h3><?php _e('John Deere Financial Multi-Use Line', 'john-deere-payment') ?></h3>
     <p class="form-row form-row-wide">
-      <label for="reg_jd_account_name"><?php _e('John Deere Account Name',  'john-deere-payment'); ?> </label>
+      <label for="reg_jd_account_name"><?php _e($account_name_label,  'john-deere-payment'); ?> </label>
       <input type="text" class="input-text" name="jd_account_name" id="reg_jd_account_name" value="<?php if (!empty($_POST['jd_account_name'])) echo esc_attr($_POST['jd_account_name']); ?>" />
     </p>
     <p class="form-row form-row-wide">
-      <label for="reg_jd_account_number"><?php _e('John Deere Account Number',  'john-deere-payment'); ?> </label>
+      <label for="reg_jd_account_number"><?php _e($account_number_label,  'john-deere-payment'); ?> </label>
       <input type="text" class="input-text" name="jd_account_number" id="reg_jd_account_number" value="<?php if (!empty($_POST['jd_account_number'])) echo esc_attr($_POST['jd_account_number']); ?>" />
     </p>
     <p class="form-row form-row-wide">
@@ -71,10 +80,10 @@ function add_john_deere_custom_field_to_registration_form()
     <div class="john-deere-options">
       <ul>
         <li>
-          <input type="radio" name="jd_payment_option" value="Regular Limit Line" checked> <?php _e('Regular Limit Line.', 'john-deere-payment') ?> <span style="font-size: 14px; display:inline-block"><?php _e('I agree that this transaction will be billed to my John Deere Financial Multi-Use Line', 'john-deere-payment') ?></span>
+          <input type="radio" name="jd_payment_option" value="Regular Limit Line" checked> <?php _e($regular_limit_line, 'john-deere-payment') ?> <span style="font-size: 14px; display:inline-block"><?php _e($regular_limit_line_desc, 'john-deere-payment') ?></span>
         </li>
         <li>
-          <input type="radio" name="jd_payment_option" value="Special Term Limit Line"><?php _e(' Special Term Limit Line.', 'john-deere-payment') ?><span style="font-size: 14px; display:inline-block"><?php _e('I agree this transaction will be applied to my John Deere Financial Multi-Use Line.', 'john-deere-payment') ?></span>
+          <input type="radio" name="jd_payment_option" value="Special Term Limit Line"><?php _e($special_term_limit_line, 'john-deere-payment') ?><span style="font-size: 14px; display:inline-block"><?php _e($special_term_limit_line_desc, 'john-deere-payment') ?></span>
         </li>
       </ul>
     </div>
