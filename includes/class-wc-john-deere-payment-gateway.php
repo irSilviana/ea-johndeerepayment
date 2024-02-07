@@ -1,5 +1,4 @@
 <?php
-
 class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
 {
   /**
@@ -54,9 +53,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     $this->has_fields         = true;
   }
 
-
-
-
   /**
    * Initialise Gateway Settings Form Fields.
    */
@@ -70,7 +66,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     foreach ($admins as $admin) {
       $admin_emails[$admin->user_email] = $admin->user_email;
     }
-
 
     $this->form_fields = array(
       'enabled' => array(
@@ -218,7 +213,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
   {
     $order = wc_get_order($order_id);
 
-
     $order_status = $this->get_option('order_status', 'processing');
     $order->update_status($order_status, __('Payment via John Deere Financial Multi-Use Line', 'john-deere-payment'));
 
@@ -226,7 +220,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
     wc_reduce_stock_levels($order_id);
 
     $order->save();
-
 
     // Remove cart.
     WC()->cart->empty_cart();
@@ -279,8 +272,6 @@ class WC_John_Deere_Payment_Gateway extends WC_Payment_Gateway
       echo '<p>' . __('The John Deere Payment method should be enabled for your account. Please login and have it enabled.', 'john-deere-payment') . '</p>';
       return;
     }
-
-
 ?>
     <div id="john_deere_payment_fields">
       <h3><?php _e('John Deere Payment Details', 'john-deere-payment') ?></h3>

@@ -196,7 +196,6 @@ function handle_jd_account_request()
 
   // Retrieve the value of the jd_account_enabled checkbox
   $jd_account_enabled = get_user_meta($user_id, 'jd_account_enabled', true);
-
   $status = $jd_account_enabled ? 'disable' : 'enable';
 
   // Send an email to the admin
@@ -282,10 +281,8 @@ function send_jd_account_request_email($user_id, $username, $status)
   $settings = get_option('woocommerce_john_deere_payment_settings'); // Get the plugin settings
   $jd_admin_email = $settings['jd_admin_email'];  // Get the admin email
 
-  // Check if the admin email is valid
-  if (!is_email($jd_admin_email)) {
-
-    // If the admin email is not valid, fall back to the default admin email
+  // If the admin email is not valid or not exist, fall back to the default admin email
+  if (!is_email($jd_admin_email) || !isset($settings['jd_admin_email'])) {
     $jd_admin_email = get_option('admin_email');
   }
 
@@ -305,7 +302,6 @@ function send_jd_account_request_email($user_id, $username, $status)
   // Send the email
   wp_mail($jd_admin_email, $subject, $message, $headers);
 }
-
 
 /**
  * Add custom fields to the user admin page
@@ -382,7 +378,6 @@ function save_john_deere_fields_from_user_admin_page($user_id)
     update_option('jd_account_request_pending', false);
   }
 }
-
 
 /**
  * Customise the form field
