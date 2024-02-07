@@ -517,7 +517,6 @@ function handle_bulk_action($redirect_to, $doaction, $user_ids)
   return $redirect_to;
 }
 
-
 /**
  * Add a custom column to the users list
  */
