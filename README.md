@@ -12,6 +12,7 @@ This is a custom payment gateway for WooCommerce that allows users to pay with t
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Notifications](#notifications)
 - [Screenshots](#screenshots)
 - [Internationalization](#Internationalization)
 - [Support](#support)
@@ -19,7 +20,7 @@ This is a custom payment gateway for WooCommerce that allows users to pay with t
 
 ## Description
 
-The John Deere Payment Plugin adds a new payment method to your WooCommerce store. Customers can enter their John Deere Financial Multi-Use Line account details at checkout and choose this payment method to pay for their orders. The payment method is not connected to the John Deere API, so the admin has to update the order status if it's not set as "completed". The default value is "Processing". Remember! Except for "Completed", the admin is required to update the order status manually.
+The John Deere Payment Plugin adds a new payment method to your WooCommerce store. Customers can enter their John Deere Financial Multi-Use Line account details at checkout and choose this payment method to pay for their orders. The payment method is not connected to the John Deere API, so the admin must update the order status if it's not set as "completed". The default value is "Processing". Remember! Except for "Completed", the admin is required to update the order status manually.
 
 ## Features
 
@@ -27,9 +28,9 @@ The John Deere Payment Plugin adds a new payment method to your WooCommerce stor
 
 - **Provides three modes of payment methods**:
 
-  - **Preselected Users**: Only preselected users will be able to use the John Deere payment method.
-  - **Enabled Users**: All users who have the John Deere account enabled will be able to use the John Deere payment method.
-  - **All Users**: All users will be able to use the John Deere payment method.
+  - **Preselected Users**: Only preselected users/customers will be able to use the John Deere payment method. (recommended)
+  - **Enabled Users**: All users/customers who have the John Deere account enabled will be able to use the John Deere payment method.
+  - **All Users**: All users/customers will be able to use the John Deere payment method.
 
 - **Account Details Input**: Allows customers to enter their John Deere account number and other details during checkout.
 
@@ -41,62 +42,87 @@ The John Deere Payment Plugin adds a new payment method to your WooCommerce stor
     - processing
     - completed
   - The admin can and change the default labels, instructions, and descriptions.
-  - Allows the admin to set a custom email to get notifications for John Deere payment requests.
+  - Allows the admin to choose the email address to get notifications for John Deere payment requests
   - Validate the admin email before saving it.
 
 - **Validation**: Validates the account number input during checkout, registration, and edit user account details.
 
-- **Email Instructions**: Adds instructions for the John Deere payment method to the order confirmation email.
+- **Email Instructions**: Add instructions / displays the John Deere account details to the order confirmation email.
 
-- **Order View Details**: Displays the John Deere account details on the order view page in the account section of your site.
+- **Order View Details**: Displays the John Deere account details on the order view page in the user account section of your site and the order details from the admin panel.
 
 - **User Profile Integration**: Allows administrators to manage John Deere account details (account enabled status, account number, account name, and payment option) from the user profile page in the WordPress admin area.
 
 - **Bulk Action**:
-  - Adds a new bulk action to the users list to enable or disable John Deere accounts for multiple users at once.
-  - Adds a new column to the users list to display the status of the John Deere payment for each user.
+  - Adds a new bulk action to the users list to enable or disable John Deere accounts for multiple users/customers at once.
+  - Adds a new column to the users list to display the status of the John Deere payment for each user/customer.
 
 ## Installation
 
 1. Upload the plugin files to the `/wp-content/plugins/john-deere-payment` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Use the WooCommerce->Settings->Payments screen to configure the plugin.
+3. Use the `WooCommerce->Settings->Payments` screen to configure the plugin.
 
 ## Usage
 
-### Setting the Admin Email
+### Setting the Payment Gateway
 
-After installation and activation, go to WooCommerce->Settings->Payments. You should see "John Deere Payment" as an option. Click "Manage" to configure the payment gateway. Here you can set the "Admin Email" option to the email address that should receive notifications about John Deere payments.
+After installation and activation, go to `WooCommerce->Settings->Payments`. Under Payment Methods, you should see "John Deere Financial Multi-Use Line" as an option. Click "Manage" to configure the payment gateway. Then choose “Enable John Deere Payment” to activate the payment gateway.
+
+### John Deere Account Mode
+
+You can choose the general mode of the John Deere payment method.
+
+- **Preselected Users**: Only users who are preselected by the administrator will be able to use the John Deere payment method. (recommended)
+
+  **How it works**
+
+  - The admin can preselect multiple users and enable or disable the John Deere Payment for those users using a regular WordPress bulk feature from the `Dashboard->Users->All Users` page.
+  - Additionally, in the front end, from the user account detail page, they will have a button to request to enable John Deere Payment.
+  - Once the user clicks that button, the admin will get an email notification and notification on the admin page to process the request.
+  - The user then has access to input their John Deere Account name and number along with preferred options of Regular Limit Line or Special Term Limit Line.
+
+- **Enabled Users**: All users who have the John Deere account enabled will be able to use the John Deere payment method.
+
+- **All Users**: All users will be able to use the John Deere payment method. If you choose this mode, it’s recommended to choose order status: on-hold or pending payment.
+
+### Setting Admin Email
+
+Set the "Admin Email" option to set the email address that would receive notifications about John Deere payments. The email address is loaded automatically from the list of administrators.
+
+### Setting Default Text
+
+Set the default text for the Payment method frontend such as title, description, fields, and instructions that will be added to the thank you page and order emails.
 
 ### Enabling or Disabling John Deere Accounts
 
-In the users list in the WordPress admin, select the users for whom you want to enable or disable the John Deere account. Then, from the "Bulk actions" dropdown, select "Enable John Deere Account" or "Disable John Deere Account" and click "Apply".
+In the users list in the WordPress admin, `Dashboard->Users->All Users` page, select the users for whom you want to enable or disable the John Deere account. Then, from the "Bulk actions" dropdown, select "Enable John Deere Account" or "Disable John Deere Account" and click "Apply".
 
 ### Viewing the John Deere Payment Status
 
-In the users list in the WordPress admin, there is a new column "John Deere Payment Status". This column displays the status of the John Deere payment for each user.
+In the users list in the WordPress admin, `Dashboard->Users->All Users` page, there is a new column "John Deere Payment Status". This column displays the status of the John Deere payment for each user.
 
-### Selecting the Payment Method Mode
+## Notifications
 
-In the WooCommerce settings, under the "Payments" tab, click on "John Deere Payment". Here you can select the mode of the payment method: "Preselected Users", "Enabled Users", or "All Users".
+Opting for the Preselected Users Mode means that, in the event of users/customers making requests to activate or deactivate their John Deere Financial Multi-Use Line, the admin will be notified both through email and within the admin area.
 
 ## Screenshots
 
 <div align="center">
   <img src="assets\images\JD-financial-multi-use-line-settings.png" alt="John Deere settings">
-   <p>John Deere Multi-Use Line Settings</p>
+   <p style="font-size:12px; font-weight:600; margin-bottom:50px;">John Deere Multi-Use Line Settings</p>
 
   <img src="assets\images\JD-bulk-users.png" alt="John Deere bulk edit users">
-  <p>John Deere bulk edit users</p>
+  <p style="font-size:12px; font-weight:600; margin-bottom:50px;">John Deere bulk edit users</p>
 
   <img src="assets\images\JD-Payment-method-checkout-page.png" alt="John Deere payment method checkout page">
-   <p>John Deere Checkout Page</p>
+   <p style="font-size:12px; font-weight:600; margin-bottom:50px;">John Deere Checkout Page</p>
   
   <img src="assets\images\JD-PreSelected-User-Mode-user-account-detail.png" alt="John Deere user account detail">
-  <p>John Deere User Account Detail</p>
+  <p style="font-size:12px; font-weight:600; margin-bottom:50px;">John Deere User Account Detail</p>
   
   <img src="assets\images\JD-order-email.png" alt="John Deere Order Email">
-  <p>John Deere Order Email</p>
+  <p style="font-size:12px; font-weight:600; margin-bottom:50px;">John Deere Order Email</p>
 </div>
 
 ## Internationalization
