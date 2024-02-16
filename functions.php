@@ -100,12 +100,13 @@ function add_john_deere_custom_field_to_registration_form()
 add_action('woocommerce_register_post', 'validate_custom_field_in_registration_form', 10, 3);
 function validate_custom_field_in_registration_form($username, $email, $validation_errors)
 {
-  if (isset($_POST['jd_account_number']) && !is_numeric($_POST['jd_account_number'])) {
+  if (!empty($_POST['jd_account_number']) && !is_numeric($_POST['jd_account_number'])) {
     $validation_errors->add('jd_account_number_error', __('John Deere Account Number should be a number!', 'john-deere-payment'));
   }
 
   return $validation_errors;
 }
+add_action('woocommerce_register_post', 'validate_custom_field_in_registration_form', 10, 3);
 
 /**
  * Save custom fields from the registration form
