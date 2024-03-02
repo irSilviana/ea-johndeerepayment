@@ -97,8 +97,8 @@ function add_john_deere_custom_field_to_registration_form()
 /**
  * Validate custom fields in the registration form
  */
-add_action('woocommerce_register_post', 'validate_custom_field_in_registration_form', 10, 3);
-function validate_custom_field_in_registration_form($username, $email, $validation_errors)
+add_action('woocommerce_register_post', 'validate_john_deere_field_in_registration_form', 10, 3);
+function validate_john_deere_field_in_registration_form($username, $email, $validation_errors)
 {
   if (!empty($_POST['jd_account_number']) && !is_numeric($_POST['jd_account_number'])) {
     $validation_errors->add('jd_account_number_error', __('John Deere Account Number should be a number!', 'john-deere-payment'));
@@ -106,13 +106,13 @@ function validate_custom_field_in_registration_form($username, $email, $validati
 
   return $validation_errors;
 }
-add_action('woocommerce_register_post', 'validate_custom_field_in_registration_form', 10, 3);
+
 
 /**
  * Save custom fields from the registration form
  */
-add_action('woocommerce_created_customer', 'save_custom_field_from_registration_form');
-function save_custom_field_from_registration_form($customer_id)
+add_action('woocommerce_created_customer', 'save_john_deere_field_from_registration_form');
+function save_john_deere_field_from_registration_form($customer_id)
 {
   if (isset($_POST['jd_account_number']) && is_numeric($_POST['jd_account_number'])) {
     update_user_meta($customer_id, 'jd_account_number', sanitize_text_field($_POST['jd_account_number']));
@@ -128,8 +128,8 @@ function save_custom_field_from_registration_form($customer_id)
 /**
  * Add custom fields to the User edit account form
  */
-add_action('woocommerce_edit_account_form', 'add_custom_fields_to_edit_account_form');
-function add_custom_fields_to_edit_account_form()
+add_action('woocommerce_edit_account_form', 'add_john_deere_fields_to_edit_account_form');
+function add_john_deere_fields_to_edit_account_form()
 {
   $jd_account_mode = get_option('woocommerce_john_deere_payment_settings')['jd_account_mode']; // Get the John Deere account mode
   $user_id = get_current_user_id();
@@ -325,9 +325,9 @@ function send_jd_account_request_email($user_id, $username, $status)
 /**
  * Add custom fields to the user admin page
  */
-add_action('show_user_profile', 'add_custom_fields_to_user_admin_page');
-add_action('edit_user_profile', 'add_custom_fields_to_user_admin_page');
-function add_custom_fields_to_user_admin_page($user)
+add_action('show_user_profile', 'add_john_deere_fields_to_user_admin_page');
+add_action('edit_user_profile', 'add_john_deere_fields_to_user_admin_page');
+function add_john_deere_fields_to_user_admin_page($user)
 {
   $jd_account_number = get_the_author_meta('jd_account_number', $user->ID);
   $jd_account_name = get_the_author_meta('jd_account_name', $user->ID);
@@ -486,8 +486,8 @@ function display_john_deere_details_on_order_view($order)
  * Extra setting for preselected_users mode
  * Payment method only visible for the preselected users
  */
-add_filter('woocommerce_available_payment_gateways', 'filter_payment_gateways');
-function filter_payment_gateways($gateways)
+add_filter('woocommerce_available_payment_gateways', 'john_deere_filter_payment_gateways');
+function john_deere_filter_payment_gateways($gateways)
 {
   $jd_account_mode = get_option('woocommerce_john_deere_payment_settings')['jd_account_mode']; // Get the John Deere account mode
 
@@ -507,8 +507,8 @@ function filter_payment_gateways($gateways)
 /**
  * Add a custom bulk action to the users list
  */
-add_filter('bulk_actions-users', 'add_bulk_action');
-function add_bulk_action($bulk_actions)
+add_filter('bulk_actions-users', 'add_john_deere_bulk_action');
+function add_john_deere_bulk_action($bulk_actions)
 {
   $bulk_actions['enable_john_deere_account'] = __('Enable John Deere Account', 'john-deere-payment');
   $bulk_actions['disable_john_deere_account'] = __('Disable John Deere Account', 'john-deere-payment');
@@ -518,8 +518,8 @@ function add_bulk_action($bulk_actions)
 /**
  * Handle the custom bulk action
  */
-add_filter('handle_bulk_actions-users', 'handle_bulk_action', 10, 3);
-function handle_bulk_action($redirect_to, $doaction, $user_ids)
+add_filter('handle_bulk_actions-users', 'handle_john_deere_bulk_action', 10, 3);
+function handle_john_deere_bulk_action($redirect_to, $doaction, $user_ids)
 {
   if ($doaction === 'enable_john_deere_account') {
     foreach ($user_ids as $user_id) {
