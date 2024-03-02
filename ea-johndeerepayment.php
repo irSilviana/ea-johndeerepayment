@@ -53,7 +53,7 @@ function ea_john_deere_admin_enqueue_styles()
   wp_enqueue_style('ea-john-deere-admin-styles');
 }
 
-// Add the filter inside your main plugin file
+// Add settings link on plugin page
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'ea_john_deere_add_plugin_page_settings_link');
 
 function ea_john_deere_add_plugin_page_settings_link($links)
